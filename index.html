@@ -29,7 +29,7 @@
         }
         input[type="email"],
         input[type="password"],
-        input[type="text"] { /* Novo campo Nome */
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -50,13 +50,12 @@
         button:hover {
             background-color: #45a049;
         }
-        #error-message {
+        #error-message, .error-message {
             color: red;
             margin-top: 15px;
             font-weight: bold;
             font-size: 14px;
         }
-        /* Links para alternar */
         .toggle-link {
             margin-top: 20px;
             font-size: 14px;
@@ -64,7 +63,6 @@
             cursor: pointer;
             text-decoration: underline;
         }
-        /* Esconde o formulário de cadastro por padrão */
         #registerForm {
             display: none;
         }
@@ -97,7 +95,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        // Importa as novas funções
         import { 
             getAuth, 
             signInWithEmailAndPassword, 
@@ -120,14 +117,12 @@
 
         const TERRITORIO_URL = "/territoriov3/territorio.html"; 
 
-        // Elementos do Login
         const loginForm = document.getElementById('loginForm');
         const loginEmailInput = document.getElementById('loginEmail');
         const loginPasswordInput = document.getElementById('loginPassword');
         const loginButton = document.getElementById('loginButton');
         const loginError = document.getElementById('loginError');
 
-        // Elementos do Cadastro
         const registerForm = document.getElementById('registerForm');
         const registerNameInput = document.getElementById('registerName');
         const registerEmailInput = document.getElementById('registerEmail');
@@ -135,11 +130,9 @@
         const registerButton = document.getElementById('registerButton');
         const registerError = document.getElementById('registerError');
 
-        // Elementos de Toggle
         const showRegister = document.getElementById('showRegister');
         const showLogin = document.getElementById('showLogin');
 
-        // Lógica para alternar os painéis
         showRegister.addEventListener('click', () => {
             loginForm.style.display = 'none';
             registerForm.style.display = 'block';
@@ -149,27 +142,23 @@
             loginForm.style.display = 'block';
         });
 
-        // 1. Verifica se o usuário já está logado
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.location.href = TERRITORIO_URL;
             }
         });
 
-        // 2. Tenta fazer login
         loginButton.addEventListener('click', async () => {
             const email = loginEmailInput.value;
             const password = loginPasswordInput.value;
             loginError.textContent = '';
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // O onAuthStateChanged vai tratar do redirecionamento
             } catch (error) {
                 loginError.textContent = "Email ou senha incorretos.";
             }
         });
 
-        // 3. Tenta fazer o Cadastro (Novo)
         registerButton.addEventListener('click', async () => {
             const nome = registerNameInput.value;
             const email = registerEmailInput.value;
@@ -182,15 +171,10 @@
             }
 
             try {
-                // Cria o usuário
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                
-                // **Salva o nome no perfil do usuário**
                 await updateProfile(auth.currentUser, {
                     displayName: nome
                 });
-
-                // O onAuthStateChanged vai tratar do redirecionamento
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
                     registerError.textContent = "Este email já está em uso.";
@@ -205,3 +189,4 @@
     </script>
 </body>
 </html>
+
