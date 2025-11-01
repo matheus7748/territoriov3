@@ -40,16 +40,40 @@
         .painel { flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.2); overflow-y: auto; max-height: 96vh;
         }
-        .painel h2 { text-align: center; margin-bottom: 20px; }
         
-        /* === NOVO ESTILO PARA AS DATAS === */
+        /* === NOVO: Container para Título + Botão === */
+        .titulo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* Espaço que o h2 tinha */
+        }
+        .painel h2 {
+            text-align: center;
+            margin-bottom: 0; /* Remove a margem do h2 */
+        }
+        .toggle-btn {
+            background: #6c757d; /* Cinza neutro */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px; /* Botão pequeno */
+            font-size: 12px; /* Fonte pequena */
+            cursor: pointer;
+            display: none; /* Começa escondido */
+        }
+        .toggle-btn:hover {
+            background: #5a6268;
+        }
+        /* === FIM NOVO === */
+
         #datasContainer {
             margin-bottom: 20px;
             padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
             background-color: #f9f9f9;
-            display: none; /* Começa escondido */
+            display: none; /* Datas começam escondidas */
         }
         #datasContainer label {
             display: block;
@@ -64,7 +88,6 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
-        /* === FIM DO NOVO ESTILO === */
 
         #observacoesContainer { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
             border-radius: 8px; background-color: #f9f9f9; display: none;
@@ -94,6 +117,8 @@
             .mapa img { max-height: 40vh; object-fit: contain; }
             #menuToggle { top: 10px; left: 10px; }
             .painel { max-height: 80vh; }
+            .titulo-container { flex-wrap: wrap; } /* Ajuste para mobile */
+            .toggle-btn { margin-top: 5px; width: 100%; }
         }
     </style>
 </head>
@@ -112,7 +137,10 @@
     </div>
 
     <div class="painel">
-        <h2 id="bairroTitulo">Selecione um Bairro</h2>
+        <div class="titulo-container">
+            <h2 id="bairroTitulo">Selecione um Bairro</h2>
+            <button id="toggleDatasBtn" class="toggle-btn">Ver Datas</button>
+        </div>
         
         <div id="datasContainer">
             <label for="dataInicio">Início do território:</label>
@@ -120,6 +148,7 @@
             <label for="dataFim">Fim do território:</label>
             <input type="date" id="dataFim">
         </div>
+        
         <div id="observacoesContainer">
             <h4>Observações do Bairro</h4>
             <textarea id="observacoesTextarea" placeholder="Digite aqui anotações importantes sobre o bairro..."></textarea>
@@ -127,7 +156,7 @@
         
         <div id="conteudoBairros"></div>
         
-        <button class="reset-btn" id="resetBtn">Limpar Marcações</button>
+        <button class="reset-btn" id="resetBtn">Reiniciar marcações</button>
         <button class="logout" id="logoutBtn">Sair</button>
     </div>
     
@@ -202,11 +231,12 @@
         const observacoesContainer = document.getElementById("observacoesContainer");
         const observacoesTextarea = document.getElementById("observacoesTextarea");
         
-        // === NOVAS VARIÁVEIS PARA AS DATAS ===
         const datasContainer = document.getElementById("datasContainer");
         const dataInicioInput = document.getElementById("dataInicio");
         const dataFimInput = document.getElementById("dataFim");
-        // === FIM DAS NOVAS VARIÁVEIS ===
+        
+        // === NOVO: Variável para o botão de toggle ===
+        const toggleDatasBtn = document.getElementById("toggleDatasBtn");
 
         const urlMapaGeral = mapaImgElement.src; 
         let bairroAtivoID = null;
@@ -228,19 +258,35 @@
             mapaImgElement.src = filename ? `/territoriov3/bairro_maps/${filename}` : urlMapaGeral;
         }
 
+        // === FUNÇÃO 'REINICIAR' ATUALIZADA ===
         async function limparMarcacoes(){
             if(!bairroAtivoID || !bairroAtivoNome) return;
-            if(!confirm(`Tem certeza que deseja limpar TODAS as marcações do bairro ${bairroAtivoNome}?`)) return;
+            if(!confirm(`Tem certeza que deseja REINICIAR TODAS as marcações e datas do bairro ${bairroAtivoNome}?`)) return;
+            
             const numQuadras = bairros[bairroAtivoNome];
             const updates = {};
+            
+            // Limpa as quadras
             for(let i=1;i<=numQuadras;i++) updates[`quadra${i}/status`] = "Não feita";
+            
+            // Limpa as datas
+            updates['datas/inicio'] = "";
+            updates['datas/fim'] = "";
+
             try{
+                // Envia tudo para o Firebase de uma vez
                 await update(ref(db, `territorios/${bairroAtivoID}`), updates);
+                
+                // Atualiza a interface (limpa os campos de data)
+                dataInicioInput.value = "";
+                dataFimInput.value = "";
+
                 mostrarFeedbackSalvo();
-                alert(`Marcações do bairro ${bairroAtivoNome} limpas com sucesso!`);
-            }catch(e){console.error(e); alert("Erro ao limpar marcações.");}
+                alert(`Marcações do bairro ${bairroAtivoNome} reiniciadas com sucesso!`);
+            }catch(e){console.error(e); alert("Erro ao reiniciar marcações.");}
         }
         resetBtn.addEventListener("click", limparMarcacoes);
+        // === FIM DA ATUALIZAÇÃO ===
 
         let saveObsTimeout;
         observacoesTextarea.addEventListener('input', ()=>{
@@ -251,29 +297,46 @@
             },1000);
         });
 
-        // === NOVA FUNÇÃO PARA SALVAR DATAS ===
+        // Salvar datas (continua igual)
         function salvarDatas() {
             if (!bairroAtivoID) return;
             const datasRef = ref(db, `territorios/${bairroAtivoID}/datas`);
             const data = { inicio: dataInicioInput.value, fim: dataFimInput.value };
             set(datasRef, data).then(mostrarFeedbackSalvo);
         }
-        // Adiciona os "ouvintes" para salvar quando a data mudar
         dataInicioInput.addEventListener('change', salvarDatas);
         dataFimInput.addEventListener('change', salvarDatas);
-        // === FIM DA FUNÇÃO SALVAR DATAS ===
+
+        // === NOVO: Event listener para o botão de toggle ===
+        toggleDatasBtn.addEventListener('click', () => {
+            if (datasContainer.style.display === 'block') {
+                datasContainer.style.display = 'none';
+                toggleDatasBtn.textContent = 'Ver Datas';
+            } else {
+                datasContainer.style.display = 'block';
+                toggleDatasBtn.textContent = 'Ocultar Datas';
+            }
+        });
+        // === FIM DO NOVO LISTENER ===
 
         function setBairroAtivo(bairroID,nomeBairro){
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
             bairroTitulo.textContent = nomeBairro;
-            resetBtn.textContent = `Limpar Marcações (${nomeBairro})`;
+            
+            // Renomeia o botão de reiniciar
+            resetBtn.textContent = `Reiniciar marcações (${nomeBairro})`;
             resetBtn.style.display='block';
+            
             atualizarImagemGeral(bairroID);
             
-            // Mostra os containers
+            // Mostra os containers (Observações e botão de Datas)
             observacoesContainer.style.display='block';
-            datasContainer.style.display='block'; // <-- MOSTRA O CONTAINER DE DATAS
+            toggleDatasBtn.style.display = 'block'; // Mostra o botão "Ver Datas"
+            
+            // Garante que as datas estão escondidas ao trocar de bairro
+            datasContainer.style.display = 'none';
+            toggleDatasBtn.textContent = 'Ver Datas';
 
             document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
             document.getElementById(`content-${bairroID}`).classList.add("active");
@@ -285,7 +348,7 @@
                 if(bairroID===bairroAtivoID) observacoesTextarea.value = snap.val()||"";
             }, {onlyOnce:true});
             
-            // === NOVO: CARREGAR AS DATAS ===
+            // Carrega as datas
             onValue(ref(db, `territorios/${bairroID}/datas`), snap=>{
                 if(bairroID===bairroAtivoID) {
                     const datas = snap.val() || {};
@@ -293,7 +356,6 @@
                     dataFimInput.value = datas.fim || "";
                 }
             }, {onlyOnce:true});
-            // === FIM DO CARREGAMENTO DE DATAS ===
 
             sidebarMenu.classList.remove("open");
         }
@@ -387,3 +449,7 @@
     </script>
 </body>
 </html>
+    </script>
+</body>
+</html>
+
