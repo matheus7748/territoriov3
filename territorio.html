@@ -40,70 +40,36 @@
         .painel { flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.2); overflow-y: auto; max-height: 96vh;
         }
-        
-        /* === NOVO: Container para Título + Botão === */
-        .titulo-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px; /* Espaço que o h2 tinha */
-        }
-        .painel h2 {
-            text-align: center;
-            margin-bottom: 0; /* Remove a margem do h2 */
-        }
-        .toggle-btn {
-            background: #6c757d; /* Cinza neutro */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px; /* Botão pequeno */
-            font-size: 12px; /* Fonte pequena */
-            cursor: pointer;
-            display: none; /* Começa escondido */
-        }
-        .toggle-btn:hover {
-            background: #5a6268;
-        }
-        /* === FIM NOVO === */
+        .painel h2 { text-align: center; margin-bottom: 20px; }
 
-        #datasContainer {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            display: none; /* Datas começam escondidas */
+        /* Campos de Data e Observações (agora visíveis por padrão) */
+        #datasContainer, #observacoesContainer {
+            margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
+            border-radius: 8px; background-color: #f9f9f9; display: none; /* Começa escondido */
         }
-        #datasContainer label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        #datasContainer input[type="date"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        #observacoesContainer { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
-            border-radius: 8px; background-color: #f9f9f9; display: none;
+        #datasContainer label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        #datasContainer input[type="date"] { width: 100%; padding: 8px; border: 1px solid #ccc;
+            border-radius: 4px; margin-bottom: 10px;
         }
         #observacoesTextarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc;
             border-radius: 4px; resize: vertical; font-size: 14px;
         }
+
         .quadra { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px;
             border-radius: 8px; background-color: #eee; }
         .quadra span { font-weight: bold; margin-right: 10px; }
-        .logout, .reset-btn { display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
+        
+        /* Botões de Ação */
+        .logout, .reset-btn, #verHistoricoBtn { 
+            display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
             margin-top: 10px; font-weight: bold; cursor: pointer;
         }
         .logout { background-color: #444; } .logout:hover { background-color: #222; }
         .reset-btn { background-color: #d9534f; display: none; } /* Começa escondido */
         .reset-btn:hover { background-color: #c9302c; }
+        #verHistoricoBtn { background-color: #6c757d; display: none; } /* Cinza, Começa escondido */
+        #verHistoricoBtn:hover { background-color: #5a6268; }
+
         .tab-content { display: none; } .tab-content.active { display: block; }
         #salvarFeedback { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background-color: green; color: white; padding: 10px 20px; border-radius: 8px;
@@ -111,14 +77,45 @@
             transition: opacity 0.3s, visibility 0.3s; z-index: 1000;
         }
         #salvarFeedback.show { opacity: 1; visibility: visible; }
+
+        /* === NOVOS ESTILOS PARA O MODAL (POP-UP) DE HISTÓRICO === */
+        .modal-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2100;
+            display: none; /* Começa escondido */
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; border-radius: 8px; padding: 20px;
+            width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .modal-header h3 { margin: 0; }
+        .modal-close {
+            font-size: 28px; font-weight: bold; cursor: pointer; border: none; background: none;
+        }
+        #historicoLista { list-style: none; padding: 0; }
+        .historico-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; border-bottom: 1px solid #eee;
+        }
+        .historico-item span { font-size: 14px; }
+        .historico-delete-btn {
+            background: #d9534f; color: white; border: none; border-radius: 50%;
+            width: 25px; height: 25px; cursor: pointer; font-weight: bold;
+            line-height: 25px; text-align: center;
+        }
+        /* === FIM DOS ESTILOS DO MODAL === */
+
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; padding: 10px; }
             .mapa { min-width: 100%; margin-bottom: 15px; margin-left: 0; padding-top: 50px; }
             .mapa img { max-height: 40vh; object-fit: contain; }
             #menuToggle { top: 10px; left: 10px; }
             .painel { max-height: 80vh; }
-            .titulo-container { flex-wrap: wrap; } /* Ajuste para mobile */
-            .toggle-btn { margin-top: 5px; width: 100%; }
         }
     </style>
 </head>
@@ -137,15 +134,12 @@
     </div>
 
     <div class="painel">
-        <div class="titulo-container">
-            <h2 id="bairroTitulo">Selecione um Bairro</h2>
-            <button id="toggleDatasBtn" class="toggle-btn">Ver Datas</button>
-        </div>
+        <h2 id="bairroTitulo">Selecione um Bairro</h2>
         
         <div id="datasContainer">
-            <label for="dataInicio">Início do território:</label>
+            <label for="dataInicio">Início do território (Atual):</label>
             <input type="date" id="dataInicio">
-            <label for="dataFim">Fim do território:</label>
+            <label for="dataFim">Fim do território (Atual):</label>
             <input type="date" id="dataFim">
         </div>
         
@@ -157,14 +151,24 @@
         <div id="conteudoBairros"></div>
         
         <button class="reset-btn" id="resetBtn">Reiniciar marcações</button>
-        <button class="logout" id="logoutBtn">Sair</button>
+        <button id="verHistoricoBtn">Ver Histórico de Datas</button> <button class="logout" id="logoutBtn">Sair</button>
     </div>
     
     <div id="salvarFeedback">Salvo! (Instantâneo)</div>
 
+    <div id="historicoModal" class="modal-backdrop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Histórico de Datas</h3>
+                <button id="fecharModalBtn" class="modal-close">&times;</button>
+            </div>
+            <ul id="historicoLista">
+                </ul>
+        </div>
+    </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -235,8 +239,12 @@
         const dataInicioInput = document.getElementById("dataInicio");
         const dataFimInput = document.getElementById("dataFim");
         
-        // === NOVO: Variável para o botão de toggle ===
-        const toggleDatasBtn = document.getElementById("toggleDatasBtn");
+        // === NOVAS VARIÁVEIS DO MODAL ===
+        const verHistoricoBtn = document.getElementById("verHistoricoBtn");
+        const historicoModal = document.getElementById("historicoModal");
+        const fecharModalBtn = document.getElementById("fecharModalBtn");
+        const historicoLista = document.getElementById("historicoLista");
+        // === FIM DAS VARIÁVEIS DO MODAL ===
 
         const urlMapaGeral = mapaImgElement.src; 
         let bairroAtivoID = null;
@@ -258,31 +266,41 @@
             mapaImgElement.src = filename ? `/territoriov3/bairro_maps/${filename}` : urlMapaGeral;
         }
 
-        // === FUNÇÃO 'REINICIAR' ATUALIZADA ===
+        // === FUNÇÃO 'REINICIAR' ATUALIZADA (AGORA ARQUIVA AS DATAS) ===
         async function limparMarcacoes(){
             if(!bairroAtivoID || !bairroAtivoNome) return;
-            if(!confirm(`Tem certeza que deseja REINICIAR TODAS as marcações e datas do bairro ${bairroAtivoNome}?`)) return;
+            if(!confirm(`Tem certeza que deseja REINICIAR TODAS as marcações e ARQUIVAR as datas atuais do bairro ${bairroAtivoNome}?`)) return;
             
+            // 1. Arquiva as datas atuais (se existirem)
+            const inicioVal = dataInicioInput.value;
+            const fimVal = dataFimInput.value;
+            if (inicioVal) { // Só arquiva se houver data de início
+                const historicoRef = ref(db, `territorios/${bairroAtivoID}/historico`);
+                // 'push' cria um ID único para este item do histórico
+                await push(historicoRef, { inicio: inicioVal, fim: fimVal || "" });
+            }
+
+            // 2. Prepara a limpeza
             const numQuadras = bairros[bairroAtivoNome];
             const updates = {};
             
             // Limpa as quadras
             for(let i=1;i<=numQuadras;i++) updates[`quadra${i}/status`] = "Não feita";
             
-            // Limpa as datas
+            // Limpa as datas atuais
             updates['datas/inicio'] = "";
             updates['datas/fim'] = "";
 
             try{
-                // Envia tudo para o Firebase de uma vez
+                // 3. Envia tudo para o Firebase de uma vez
                 await update(ref(db, `territorios/${bairroAtivoID}`), updates);
                 
-                // Atualiza a interface (limpa os campos de data)
+                // 4. Atualiza a interface (limpa os campos de data)
                 dataInicioInput.value = "";
                 dataFimInput.value = "";
 
                 mostrarFeedbackSalvo();
-                alert(`Marcações do bairro ${bairroAtivoNome} reiniciadas com sucesso!`);
+                alert(`Marcações do bairro ${bairroAtivoNome} reiniciadas e datas arquivadas!`);
             }catch(e){console.error(e); alert("Erro ao reiniciar marcações.");}
         }
         resetBtn.addEventListener("click", limparMarcacoes);
@@ -297,7 +315,7 @@
             },1000);
         });
 
-        // Salvar datas (continua igual)
+        // Salvar datas atuais (quando alteradas)
         function salvarDatas() {
             if (!bairroAtivoID) return;
             const datasRef = ref(db, `territorios/${bairroAtivoID}/datas`);
@@ -307,37 +325,88 @@
         dataInicioInput.addEventListener('change', salvarDatas);
         dataFimInput.addEventListener('change', salvarDatas);
 
-        // === NOVO: Event listener para o botão de toggle ===
-        toggleDatasBtn.addEventListener('click', () => {
-            if (datasContainer.style.display === 'block') {
-                datasContainer.style.display = 'none';
-                toggleDatasBtn.textContent = 'Ver Datas';
-            } else {
-                datasContainer.style.display = 'block';
-                toggleDatasBtn.textContent = 'Ocultar Datas';
+        // === NOVAS FUNÇÕES DO MODAL DE HISTÓRICO ===
+        
+        // Função para excluir um item do histórico
+        async function excluirEntradaHistorico(key) {
+            if (!bairroAtivoID || !key) return;
+            if (!confirm("Tem certeza que deseja excluir esta entrada do histórico?")) return;
+            
+            try {
+                const entradaRef = ref(db, `territorios/${bairroAtivoID}/historico/${key}`);
+                await remove(entradaRef);
+                mostrarFeedbackSalvo();
+                // Recarrega o modal para mostrar a lista atualizada
+                abrirModalHistorico();
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao excluir entrada.");
+            }
+        }
+
+        // Função para abrir e preencher o modal
+        function abrirModalHistorico() {
+            if (!bairroAtivoID) return;
+            
+            const historicoRef = ref(db, `territorios/${bairroAtivoID}/historico`);
+            onValue(historicoRef, (snapshot) => {
+                historicoLista.innerHTML = ""; // Limpa a lista antiga
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const key = childSnapshot.key;
+                        const data = childSnapshot.val();
+                        
+                        const item = document.createElement("li");
+                        item.classList.add("historico-item");
+                        
+                        const texto = document.createElement("span");
+                        texto.textContent = `Início: ${data.inicio || 'N/D'} | Fim: ${data.fim || 'N/D'}`;
+                        
+                        const deleteBtn = document.createElement("button");
+                        deleteBtn.classList.add("historico-delete-btn");
+                        deleteBtn.innerHTML = "&times;"; // "X"
+                        deleteBtn.title = "Excluir esta entrada";
+                        deleteBtn.addEventListener('click', () => excluirEntradaHistorico(key));
+                        
+                        item.append(texto, deleteBtn);
+                        historicoLista.appendChild(item);
+                    });
+                } else {
+                    historicoLista.innerHTML = "<li>Nenhuma data arquivada.</li>";
+                }
+                historicoModal.style.display = 'flex'; // Mostra o modal
+            }, { onlyOnce: true }); // 'onlyOnce' para não ficar ouvindo o tempo todo
+        }
+
+        // Event Listeners para o modal
+        verHistoricoBtn.addEventListener('click', abrirModalHistorico);
+        fecharModalBtn.addEventListener('click', () => {
+            historicoModal.style.display = 'none';
+        });
+        // Clicar fora do modal também fecha
+        historicoModal.addEventListener('click', (e) => {
+            if (e.target === historicoModal) {
+                historicoModal.style.display = 'none';
             }
         });
-        // === FIM DO NOVO LISTENER ===
+        // === FIM DAS FUNÇÕES DO MODAL ===
+
 
         function setBairroAtivo(bairroID,nomeBairro){
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
             bairroTitulo.textContent = nomeBairro;
             
-            // Renomeia o botão de reiniciar
             resetBtn.textContent = `Reiniciar marcações (${nomeBairro})`;
-            resetBtn.style.display='block';
             
+            // Mostra os botões e containers do painel
+            resetBtn.style.display='block';
+            verHistoricoBtn.style.display = 'block';
+            observacoesContainer.style.display='block';
+            datasContainer.style.display='block';
+
             atualizarImagemGeral(bairroID);
             
-            // Mostra os containers (Observações e botão de Datas)
-            observacoesContainer.style.display='block';
-            toggleDatasBtn.style.display = 'block'; // Mostra o botão "Ver Datas"
-            
-            // Garante que as datas estão escondidas ao trocar de bairro
-            datasContainer.style.display = 'none';
-            toggleDatasBtn.textContent = 'Ver Datas';
-
             document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
             document.getElementById(`content-${bairroID}`).classList.add("active");
             document.querySelectorAll("#sidebarBairrosList button").forEach(b=>b.classList.remove("active"));
@@ -348,7 +417,7 @@
                 if(bairroID===bairroAtivoID) observacoesTextarea.value = snap.val()||"";
             }, {onlyOnce:true});
             
-            // Carrega as datas
+            // Carrega as datas ATUAIS
             onValue(ref(db, `territorios/${bairroID}/datas`), snap=>{
                 if(bairroID===bairroAtivoID) {
                     const datas = snap.val() || {};
@@ -437,19 +506,17 @@
 
         onAuthStateChanged(auth,user=>{
             if(user) carregarPainel();
-            // Corrigido para apontar para o index.html (página de login)
             else window.location.href="/territoriov3/index.html"; 
         });
 
         document.getElementById("logoutBtn").addEventListener("click",()=>{
-            // Corrigido para apontar para o index.html (página de login)
             signOut(auth).then(()=>window.location.href="/territoriov3/index.html");
         });
 
     </script>
 </body>
 </html>
-    </script>
-</body>
-</html>
+
+
+
 
