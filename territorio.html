@@ -291,7 +291,6 @@
         };
 
         // 🖼️ MAPA DE NOMES DE ARQUIVO (Aponte para os nomes "limpos")
-        // ERRO DE SINTAXE "A" REMOVIDO
         const mapaNomesArquivos = {
             "ComercialCentro": "comercialcentro.jpeg",
             "ComercialVilaSoJorge": "comercialvilasaojorge.jpeg",
@@ -495,7 +494,7 @@
                             if (status === "Não feita") {
                                 btn.textContent = "Não feita";
                                 btn.className = "btn-nao";
-                            } else if (status === "Em andamento") { // ERRO "Em\nandamento" CORRIGIDO
+                            } else if (status === "Em andamento") { 
                                 btn.textContent = "Em andamento";
                                 btn.className = "btn-meio";
                             } else if (status === "Concluída") {
@@ -506,7 +505,7 @@
                     }
                 });
             });
-        }
+        // } <-- O "}" EXTRA QUE ESTAVA AQUI FOI REMOVIDO.
 
         // 🔒 VERIFICAÇÃO DE AUTENTICAÇÃO
         onAuthStateChanged(auth, (user) => {
@@ -527,6 +526,7 @@
 
 </body>
 </html>
+
 
 
 
