@@ -362,8 +362,8 @@
         function atualizarImagemGeral(bairroID) {
             const filename = mapaNomesArquivos[bairroID];
             if (filename) {
-                // CORRIGIDO: Aponta para /sitesal-ofinalv3/
-                mapaImgElement.src = `/sitesal-ofinalv3/bairro_maps/${filename}`; 
+                // CORRIGIDO: Aponta para /territoriov3/
+                mapaImgElement.src = `/territoriov3/bairro_maps/${filename}`; 
             } else {
                 mapaImgElement.src = urlMapaGeral; 
             }
@@ -380,7 +380,7 @@
                 updates[`quadra${i}/status`] = "Não feita";
             }
             try {
-                const bairroRef = ref(db, `territorios/${bairroAtivoID}`);
+                const bairroRef = ref(db, `territorios/${bairroID}`);
                 await update(bairroRef, updates);
                 mostrarFeedbackSalvo(); 
                 alert(`Marcações do bairro ${bairroAtivoNome} limpas com sucesso!`);
@@ -512,8 +512,8 @@
             if (user) {
                 carregarPainel();
             } else {
-                // CORRIGIDO: Aponta para /sitesal-ofinalv3/
-                window.location.href = "/sitesal-ofinalv3/index.html"; 
+                // CORRIGIDO: Aponta para /territoriov3/
+                window.location.href = "/territoriov3/index.html"; 
             }
         });
 
@@ -527,7 +527,5 @@
 </body>
 </html>
 
-</body>
-</html>
 
 
