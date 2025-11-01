@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Mapa</title>
     <style>
+        /* (CSS - Sem alterações) */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -14,7 +15,6 @@
             min-height: 100vh;
             margin: 0;
         }
-
         .login-container {
             background-color: white;
             padding: 40px;
@@ -23,12 +23,10 @@
             width: 300px;
             text-align: center;
         }
-
         h2 {
             margin-bottom: 25px;
             color: #333;
         }
-
         input[type="email"],
         input[type="password"] {
             width: 100%;
@@ -38,7 +36,6 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-
         button {
             width: 100%;
             padding: 10px;
@@ -49,11 +46,9 @@
             cursor: pointer;
             font-size: 16px;
         }
-
         button:hover {
             background-color: #45a049;
         }
-
         #error-message {
             color: red;
             margin-top: 15px;
@@ -75,7 +70,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-        // SUAS CONFIGURAÇÕES FIREBASE
+        // (Configurações Firebase - Sem alterações)
         const firebaseConfig = {
             apiKey: "AIzaSyCjSNz59SgzJwzqndzOJO4GRqHZ3-6abGM",
             authDomain: "login-territorios.firebaseapp.com",
@@ -85,7 +80,6 @@
             appId: "1:495689013315:web:c8b22bbf1fe9ad99779cf6",
             measurementId: "G-P4YG93BTN6"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
@@ -94,13 +88,12 @@
         const loginButton = document.getElementById('loginButton');
         const errorMessage = document.getElementById('error-message');
         
-        // CORRIGIDO: URL do novo repositório e nome de arquivo sem acento
+        // CORRIGIDO: Aponta para /sitesal-ofinalv3/
         const TERRITORIO_URL = "/sitesal-ofinalv3/territorio.html"; 
 
         // 1. Verifica se o usuário já está logado
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Se estiver logado, redireciona imediatamente
                 window.location.href = TERRITORIO_URL;
             }
         });
@@ -109,13 +102,10 @@
         loginButton.addEventListener('click', async () => {
             const email = emailInput.value;
             const password = passwordInput.value;
-            errorMessage.textContent = ''; // Limpa mensagens de erro anteriores
-
+            errorMessage.textContent = '';
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // Login bem-sucedido, redireciona
                 window.location.href = TERRITORIO_URL;
-
             } catch (error) {
                 let message = "Erro de login. Verifique o email e a senha.";
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
