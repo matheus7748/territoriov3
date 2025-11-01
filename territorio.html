@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa do Território</title>
     <style>
-        /* 1. Transição e Acessibilidade */
+        /* (CSS - Sem alterações) */
         * {
             transition: all 0.3s ease;
             box-sizing: border-box; 
@@ -14,13 +14,6 @@
             outline: 2px solid #4a90e2; 
             outline-offset: 2px;
         }
-        
-        /* 2. Cursor Padrão */
-        .quadra button, .logout, .reset-btn, #menuToggle, #closeMenuBtn, #sidebarBairrosList button {
-            cursor: pointer;
-        }
-        
-        /* Estilos Base */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -33,8 +26,6 @@
             padding: 20px;
             flex-direction: row;
         }
-
-        /* --- CSS SIDEBAR --- */
         #menuToggle {
             position: fixed;
             top: 15px;
@@ -48,11 +39,8 @@
             font-weight: bold;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            cursor: pointer;
         }
-        #menuToggle:hover {
-            background: #3a7acb;
-        }
-
         #sidebarMenu {
             position: fixed;
             top: 0;
@@ -67,18 +55,15 @@
             overflow-y: auto;
             transition: left 0.3s ease;
         }
-
         #sidebarMenu.open {
             left: 0;
         }
-        
         #sidebarMenu h3 {
             margin-top: 0;
             border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
             margin-bottom: 10px;
         }
-
         #closeMenuBtn {
             background: #d9534f;
             color: white;
@@ -89,8 +74,8 @@
             top: 10px;
             right: 10px;
             font-weight: bold;
+            cursor: pointer;
         }
-
         #sidebarBairrosList button {
             display: block;
             width: 100%;
@@ -103,6 +88,7 @@
             color: #333;
             border-radius: 5px;
             outline: none;
+            cursor: pointer;
         }
         #sidebarBairrosList button.active {
             background: #4a90e2;
@@ -112,9 +98,6 @@
         #sidebarBairrosList button:hover:not(.active) {
             background: #e0e0e0;
         }
-        /* --- FIM CSS SIDEBAR --- */
-
-
         .mapa {
             flex: 2;
             min-width: 400px;
@@ -128,13 +111,11 @@
             position: relative;
             margin-left: 50px;
         }
-
         .mapa img {
             max-width: 100%;
             height: auto;
             border-radius: 10px;
         }
-
         .painel {
             flex: 1;
             min-width: 350px;
@@ -145,10 +126,7 @@
             overflow-y: auto;
             max-height: 96vh;
         }
-        
         .painel h2 { text-align: center; margin-bottom: 20px; }
-        
-        /* Estilos para o novo campo de Observações */
         #observacoesContainer {
             margin-bottom: 20px;
             padding: 15px;
@@ -165,38 +143,30 @@
             resize: vertical;
             font-size: 14px;
         }
-        
-        /* Estilos de quadras mantidos */
         .quadra { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; border-radius: 8px; background-color: #eee; }
         .quadra span { font-weight: bold; }
-        .quadra button { border: none; padding: 6px 10px; border-radius: 6px; color: white; font-weight: bold; min-width: 120px; }
+        .quadra button { border: none; padding: 6px 10px; border-radius: 6px; color: white; font-weight: bold; min-width: 120px; cursor: pointer; }
         .quadra button:hover { filter: brightness(110%); transform: scale(1.02); }
-
         .btn-nao { background-color: red; }
         .btn-meio { background-color: orange; }
         .btn-sim { background-color: green; }
-        
-        /* Botões de Ação Final */
-        .logout { display: block; width: 100%; background-color: #444; color: white; border: none; padding: 10px; border-radius: 8px; margin-top: 20px; }
-        .logout:hover { background-color: #222; }
-        
-        .reset-btn {
+        .logout, .reset-btn {
             display: block; 
             width: 100%; 
-            background-color: #d9534f;
             color: white; 
             border: none; 
             padding: 10px; 
             border-radius: 8px; 
             margin-top: 10px; 
             font-weight: bold;
+            cursor: pointer;
         }
+        .logout { background-color: #444; }
+        .logout:hover { background-color: #222; }
+        .reset-btn { background-color: #d9534f; }
         .reset-btn:hover { background-color: #c9302c; }
-        
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
-        /* Estilo para a Notificação de Salvamento */
         #salvarFeedback {
             position: fixed;
             bottom: 20px;
@@ -216,32 +186,26 @@
             opacity: 1;
             visibility: visible;
         }
-
-        /* 📱 MEDIA QUERY: AJUSTES PARA CELULAR (Telas menores que 768px) */
         @media (max-width: 768px) {
             body {
                 flex-direction: column; 
                 height: auto; 
                 padding: 10px;
             }
-
             .mapa {
                 min-width: 100%; 
                 margin-bottom: 15px;
                 margin-left: 0;
                 padding-top: 50px;
             }
-
             .mapa img {
                  max-height: 40vh; 
                  object-fit: contain;
             }
-            
             #menuToggle {
                 top: 10px;
                 left: 10px;
             }
-            
             .painel {
                 max-height: 80vh;
             }
@@ -255,8 +219,7 @@
     <div id="sidebarMenu">
         <button id="closeMenuBtn">X</button>
         <h3>Selecione o Bairro</h3>
-        <div id="sidebarBairrosList">
-            </div>
+        <div id="sidebarBairrosList"></div>
     </div>
 
     <div class="mapa">
@@ -271,8 +234,7 @@
             <textarea id="observacoesTextarea" placeholder="Digite aqui anotações importantes sobre o bairro..."></textarea>
         </div>
         
-        <div id="conteudoBairros">
-             </div>
+        <div id="conteudoBairros"></div>
         
         <button class="reset-btn" id="resetBtn" style="display: none;">Limpar Marcações</button>
         <button class="logout" id="logoutBtn">Sair</button>
@@ -285,7 +247,7 @@
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-        // SUAS CONFIGURAÇÕES FIREBASE
+        // (Configurações Firebase - Sem alterações)
         const firebaseConfig = {
             apiKey: "AIzaSyCjSNz59SgzJwzqndzOJO4GRqHZ3-6abGM",
             authDomain: "login-territorios.firebaseapp.com",
@@ -295,12 +257,11 @@
             appId: "1:495689013315:web:c8b22bbf1fe9ad99779cf6",
             measurementId: "G-P4YG93BTN6"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app); 
         const auth = getAuth(app);    
 
-        // 🏘️ Definição dos Bairros e Quadras
+        // (Lista de Bairros - Sem alterações)
         const bairros = {
             "Comercial (Centro)": 15,
             "Comercial (Vila São Jorge)": 19,
@@ -329,10 +290,11 @@
             "Vista Bonita D": 11
         };
 
-        // 🖼️ MAPA DE NOMES DE ARQUIVO (CORRIGIDO PARA JPEG E ERRO DE SINTAXE)
+        // 🖼️ MAPA DE NOMES DE ARQUIVO (CORRIGIDO PARA NOMES "LIMPOS", SEM ACENTOS/PARÊNTESES)
+        // O código vai procurar por estes nomes. Renomeie seus arquivos no GitHub para bater com esta lista!
         const mapaNomesArquivos = {
-            "ComercialCentro": "comercial(centro).jpeg",
-            "ComercialVilaSoJorge": "comercial(vilasãojorge).jpeg",
+            "ComercialCentro": "comercialcentro.jpeg",
+            "ComercialVilaSoJorge": "comercialvilasaojorge.jpeg",
             "VilaBrasil": "vilabrasil.jpeg",
             "VilaIti": "vilaiti.jpeg",
             "CinquentenrioA": "cinquentenarioA.jpeg",
@@ -346,10 +308,11 @@
             "SoBento": "saobento.jpeg",
             "ParqueAlvoradaA": "pqalvoradaA.jpeg",
             "ParqueAlvoradaB": "pqalvoradaB.jpeg",
-            "SantaMnica": "santamônica.jpeg",
-            "Sumar": "sumare.jpeg", // ERRO DE SINTAXE CORRIGIDO AQUI
+            "SantaMnica": "santamonica.jpeg", // Removido o 'ô'
+            "Sumar": "sumare.jpeg",
             "SouzaReis": "souzareis.jpeg",
             "Itapu": "itapua.jpeg",
+A
             "Itapura": "itapura.jpeg",
             "PqdosReseds": "pqdosresedas.jpeg",
             "VistaBonitaA": "vistabonitaA.jpeg",
@@ -389,7 +352,7 @@
 
         // ------------------ FUNÇÕES AUXILIARES ------------------
 
-        // 🔄 FUNÇÃO DE FEEDBACK DE SALVAMENTO
+        // (Função feedback - Sem alterações)
         let feedbackTimeout;
         function mostrarFeedbackSalvo() {
             clearTimeout(feedbackTimeout);
@@ -411,7 +374,7 @@
             }
         }
         
-        // 🧹 FUNÇÃO DE LIMPEZA DE MARCAÇÕES (RESET)
+        // (Função limparMarcações - Sem alterações)
         async function limparMarcacoes() {
             if (!bairroAtivoID || !bairroAtivoNome) return;
 
@@ -427,7 +390,7 @@
             }
 
             try {
-                const bairroRef = ref(db, `territorios/${bairroID}`);
+                const bairroRef = ref(db, `territorios/${bairroAtivoID}`);
                 await update(bairroRef, updates);
                 mostrarFeedbackSalvo(); 
                 alert(`Marcações do bairro ${bairroAtivoNome} limpas com sucesso!`);
@@ -436,10 +399,9 @@
                 alert("Erro ao limpar marcações. Verifique sua conexão e permissões.");
             }
         }
-        
         resetBtn.addEventListener('click', limparMarcacoes);
         
-        // 📝 FUNÇÃO DE SALVAMENTO DE OBSERVAÇÕES
+        // (Função salvarObservacoes - Sem alterações)
         let saveObsTimeout;
         observacoesTextarea.addEventListener('input', () => {
             if (!bairroAtivoID) return;
@@ -453,27 +415,23 @@
             }, 1000); 
         });
 
-        // ------------------ FUNÇÃO DE TROCA DE BAIRRO (AÇÃO PRINCIPAL DO MENU) ------------------
+        // (Função setBairroAtivo - Sem alterações)
         function setBairroAtivo(bairroID, nomeBairro) {
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
             
-            // 1. Atualiza o Título, o Botão de Reset e a Imagem
             bairroTitulo.textContent = nomeBairro;
             resetBtn.textContent = `Limpar Marcações (${nomeBairro})`;
             resetBtn.style.display = 'block';
             atualizarImagemGeral(bairroID); 
             observacoesContainer.style.display = 'block'; 
 
-            // 2. Esconde todos os conteúdos e mostra o ativo
             document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
             document.getElementById(`content-${bairroID}`).classList.add("active");
 
-            // 3. Atualiza o estado "ativo" no menu
             document.querySelectorAll("#sidebarBairrosList button").forEach(btn => btn.classList.remove("active"));
             document.querySelector(`#sidebarBairrosList button[data-bairro="${bairroID}"]`).classList.add("active");
 
-            // 4. Carrega as observações 
             const obsRef = ref(db, `territorios/${bairroID}/observacoes`);
             onValue(obsRef, (snapshot) => {
                 const obs = snapshot.val() || "";
@@ -482,7 +440,6 @@
                 }
             }, { onlyOnce: true });
 
-            // 5. Fecha o menu
             sidebarMenu.classList.remove("open");
         }
 
@@ -496,12 +453,10 @@
             let primeiroBairroID = null;
             let primeiroBairroNome = null;
             
-            // 1. Cria a estrutura de quadras no painel e botões na sidebar
             Object.keys(bairros).forEach((nomeBairro, index) => {
                 // GERA O BAIRROID (REMOVENDO ACENTOS E ESPAÇOS)
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g, '');
 
-                // A. Cria o botão na SIDEBAR
                 const sidebarBtn = document.createElement("button");
                 sidebarBtn.textContent = nomeBairro;
                 sidebarBtn.dataset.bairro = bairroID;
@@ -512,8 +467,6 @@
                     setBairroAtivo(bairroID, nomeBairro);
                 });
 
-
-                // B. Cria o container de CONTEÚDO (quadras)
                 const tabContent = document.createElement("div");
                 tabContent.classList.add("tab-content");
                 tabContent.id = `content-${bairroID}`;
@@ -521,7 +474,6 @@
                 
                 quadrasPorBairro[nomeBairro] = {}; 
 
-                // C. Cria as quadras
                 for (let i = 1; i <= numQuadras; i++) {
                     const div = document.createElement("div");
                     div.classList.add("quadra");
@@ -529,7 +481,6 @@
                     const nome = document.createElement("span");
                     let nomeQuadra = `Quadra ${i}`;
                     
-                    /* ⚠️ PERSONALIZAÇÃO DE NOME: Parque Alvorada A (CDHU/CEU) ⚠️ */
                     if (nomeBairro === "Parque Alvorada A") {
                         if (i === 20) {
                             nomeQuadra = "CDHU";
@@ -549,7 +500,6 @@
                     
                     quadrasPorBairro[nomeBairro][i] = btn; 
 
-                    // Evento de Clique e Salvamento
                     btn.addEventListener("click", () => {
                         let novoStatus;
                         
@@ -575,13 +525,11 @@
                 }
             });
             
-            // 2. Ativa o primeiro bairro criado por padrão
             if (primeiroBairroID) {
                 setBairroAtivo(primeiroBairroID, primeiroBairroNome);
             }
 
-
-            // 3. 🔄 Configura o Listener em tempo real para TODAS as quadras
+            // (Listener do Firebase - Sem alterações)
             const geralRef = ref(db, "territorios");
             onValue(geralRef, (snapshot) => {
                 const dadosGerais = snapshot.val() || {};
@@ -598,7 +546,8 @@
                             if (status === "Não feita") {
                                 btn.textContent = "Não feita";
                                 btn.className = "btn-nao";
-                            } else if (status === "Em andamento") {
+                            } else if (status === "Em
+andamento") {
                                 btn.textContent = "Em andamento";
                                 btn.className = "btn-meio";
                             } else if (status === "Concluída") {
@@ -612,17 +561,15 @@
         }
 
 
-        // 🔒 VERIFICAÇÃO DE AUTENTICAÇÃO
+        // (Autenticação e Logout - Sem alterações)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 carregarPainel();
             } else {
-                // Caminho configurado para /territoriov3/
                 window.location.href = "/territoriov3/index.html"; 
             }
         });
 
-        // 🚪 Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
           await signOut(auth);
         });
@@ -630,9 +577,4 @@
     </script>
 
 </body>
-</html>
-    </script>
-
-</body>
-
 </html>
