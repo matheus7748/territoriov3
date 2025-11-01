@@ -45,7 +45,6 @@
         }
         .painel h2 { text-align: center; margin-bottom: 20px; }
         
-        /* Campos de Data e Observações (escondidos por padrão) */
         #datasContainer, #observacoesContainer {
             margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
             border-radius: 8px; background-color: #f9f9f9; display: none;
@@ -58,65 +57,30 @@
             border-radius: 4px; resize: vertical; font-size: 14px;
         }
 
-        /* === NOVOS ESTILOS PARA QUADRAS === */
-        .quadra-container {
-            background-color: #eee;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            padding: 8px;
+        .quadra-container { background-color: #eee; border-radius: 8px;
+            margin-bottom: 12px; padding: 8px;
         }
-        .quadra-main {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .quadra-main { display: flex; justify-content: space-between; align-items: center; }
+        .quadra-nome-container { display: flex; align-items: center; }
+        .quadra-nome { font-weight: bold; margin-right: 5px; }
+        .toggle-anotacao-btn { background: none; border: none; cursor: pointer;
+            font-size: 16px; padding: 0 5px;
         }
-        .quadra-nome-container {
-            display: flex;
-            align-items: center;
+        .status-btn { flex: 1; max-width: 130px; height: 40px; border: none;
+            border-radius: 8px; font-weight: bold; color: white; cursor: pointer;
         }
-        .quadra-nome {
-            font-weight: bold;
-            margin-right: 5px;
+        .quadra-details { display: none; margin-top: 8px;
+            padding-top: 8px; border-top: 1px solid #ddd;
         }
-        .toggle-anotacao-btn { /* Botão de toggle (caneta) */
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 0 5px;
+        .dirigente-input { width: 100%; padding: 5px; border: 1px solid #ccc;
+            border-radius: 4px; font-size: 12px;
         }
-        .status-btn { /* Botão de Status (Não feita, etc) */
-            flex: 1;
-            max-width: 130px; /* Limita a largura */
-            height: 40px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
+        .quadra-mapeador { font-size: 11px; color: #555;
+            text-align: right; margin-top: 4px;
         }
-        .quadra-details { /* Área de anotação retrátil */
-            display: none; /* Escondido por padrão */
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid #ddd;
-        }
-        .dirigente-input { /* Campo de texto para o dirigente */
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        .quadra-mapeador { /* Texto "Salvo por..." */
-            font-size: 11px;
-            color: #555;
-            text-align: right;
-            margin-top: 4px;
-        }
-        /* === FIM DOS ESTILOS DE QUADRA === */
         
-        .logout, .reset-btn, #verHistoricoBtn { 
+        /* Botões de Ação */
+        .logout, .reset-btn, #verHistoricoBtn, #relatorioBtn {
             display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
             margin-top: 10px; font-weight: bold; cursor: pointer;
         }
@@ -126,6 +90,12 @@
         #verHistoricoBtn { background-color: #6c757d; display: none; }
         #verHistoricoBtn:hover { background-color: #5a6268; }
 
+        #relatorioBtn { /* Botão Admin */
+            background-color: #007bff; /* Azul */
+            display: none; /* Começa escondido por padrão */
+        }
+        #relatorioBtn:hover { background-color: #0056b3; }
+        
         .tab-content { display: none; } .tab-content.active { display: block; }
         #salvarFeedback { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background-color: green; color: white; padding: 10px 20px; border-radius: 8px;
@@ -134,7 +104,7 @@
         }
         #salvarFeedback.show { opacity: 1; visibility: visible; }
 
-        /* Estilos do Modal (sem alterações) */
+        /* Estilos do Modal (Histórico e Relatório) */
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2100;
@@ -142,6 +112,10 @@
         }
         .modal-content { background: white; border-radius: 8px; padding: 20px;
             width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto;
+        }
+        /* NOVO: Modal de Relatório maior */
+        .modal-content-large {
+            max-width: 800px; /* Mais largo */
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;
@@ -158,13 +132,80 @@
             line-height: 25px; text-align: center;
         }
 
+        /* === NOVOS ESTILOS PARA O RELATÓRIO === */
+        #relatorioBairroSelector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        #relatorioBairroSelector label {
+            display: block;
+            font-size: 14px;
+        }
+        #gerarRelatorioBtn, #imprimirRelatorioBtn {
+             background-color: #28a745; color: white; border: none; padding: 10px;
+             border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;
+        }
+        #imprimirRelatorioBtn { background-color: #007bff; }
+        
+        #relatorioConteudo {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        #relatorioConteudo h4 {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        #relatorioConteudo h5 { margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        #relatorioConteudo p { font-size: 13px; margin: 4px 0; }
+        #relatorioConteudo .quadra-item { margin-bottom: 10px; }
+        /* === FIM ESTILOS RELATÓRIO === */
+
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; padding: 10px; }
             .mapa { min-width: 100%; margin-bottom: 15px; margin-left: 0; padding-top: 50px; }
             .mapa img { max-height: 40vh; object-fit: contain; }
             #menuToggle { top: 10px; left: 10px; }
             .painel { max-height: 80vh; }
+            #relatorioBairroSelector { grid-template-columns: 1fr; } /* 1 coluna no mobile */
         }
+        
+        /* === NOVO: ESTILO DE IMPRESSÃO === */
+        @media print {
+            body, .mapa, .painel, #sidebarMenu, #menuToggle, #historicoModal {
+                display: none !important; /* Esconde tudo */
+            }
+            #relatorioModal, .modal-backdrop {
+                display: block !important;
+                position: static;
+                box-shadow: none;
+                border: none;
+                background: none;
+                height: auto;
+                width: 100%;
+            }
+            #relatorioModal .modal-content {
+                box-shadow: none;
+                border: none;
+                max-width: 100%;
+                max-height: none;
+            }
+            /* Esconde os botões de controle na impressão */
+            .modal-header .modal-close, #gerarRelatorioBtn, #imprimirRelatorioBtn, #relatorioBairroSelector {
+                display: none !important;
+            }
+            .modal-header h3 { font-size: 24px; }
+            #relatorioConteudo { margin-top: 0; border: none; }
+        }
+
     </style>
 </head>
 <body>
@@ -201,6 +242,7 @@
         
         <button class="reset-btn" id="resetBtn">Reiniciar marcações</button>
         <button id="verHistoricoBtn">Ver Histórico de Datas</button>
+        <button id="relatorioBtn">Ver Relatório (Admin)</button>
         <button class="logout" id="logoutBtn">Sair</button>
     </div>
     
@@ -216,9 +258,28 @@
         </div>
     </div>
 
+    <div id="relatorioModal" class="modal-backdrop">
+        <div class="modal-content modal-content-large">
+            <div class="modal-header">
+                <h3>Relatório Geral de Territórios</h3>
+                <button id="fecharRelatorioBtn" class="modal-close">&times;</button>
+            </div>
+            
+            <h4>1. Selecione os Bairros</h4>
+            <div id="relatorioBairroSelector">
+                </div>
+            <button id="gerarRelatorioBtn">Gerar Relatório</button>
+
+            <div id="relatorioConteudo">
+                </div>
+            
+            <button id="imprimirRelatorioBtn" style="display: none;">Imprimir Relatório</button>
+        </div>
+    </div>
     <script type="module">
+        // === ATUALIZADO: Importa 'get' para buscar todos os dados de uma vez ===
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update, push, remove, get } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
         // (Config, Bairros, Nomes Arquivos... sem alterações)
@@ -249,7 +310,7 @@
             "VilaBrasil": "vilabrasil.jpeg",
             "VilaIti": "vilaiti.jpeg",
             "CinquentenrioA": "cinquentenarioA.jpeg",
-            "CinquentenrioB": "cinquententorioB.jpeg",
+            "CinquentenrioB": "cinquentenarioB.jpeg",
             "VilaMendes": "vilamendes.jpeg",
             "VilaLusoA": "vilalusoA.jpeg",
             "VilaLusoB": "vilalusoB.jpeg",
@@ -291,13 +352,20 @@
         const fecharModalBtn = document.getElementById("fecharModalBtn");
         const historicoLista = document.getElementById("historicoLista");
         const welcomeMessage = document.getElementById("welcomeMessage");
+        
+        // === NOVAS VARIÁVEIS DO RELATÓRIO ===
+        const relatorioBtn = document.getElementById("relatorioBtn");
+        const relatorioModal = document.getElementById("relatorioModal");
+        const fecharRelatorioBtn = document.getElementById("fecharRelatorioBtn");
+        const relatorioBairroSelector = document.getElementById("relatorioBairroSelector");
+        const gerarRelatorioBtn = document.getElementById("gerarRelatorioBtn");
+        const relatorioConteudo = document.getElementById("relatorioConteudo");
+        const imprimirRelatorioBtn = document.getElementById("imprimirRelatorioBtn");
 
         const urlMapaGeral = mapaImgElement.src; 
         let bairroAtivoID = null;
         let bairroAtivoNome = null;
         let isContentLoaded = false; 
-        
-        // === NOVA VARIÁVEL GLOBAL PARA O NOME DO UTILIZADOR ===
         let currentUserName = null;
 
         // (Funções do Menu, Feedback, Imagem, Reiniciar/Arquivar, Salvar Datas, Histórico... sem alterações)
@@ -331,8 +399,8 @@
             const updates = {};
             for(let i=1;i<=numQuadras;i++) {
                 updates[`quadra${i}/status`] = "Não feita";
-                updates[`quadra${i}/mapeador`] = ""; // Limpa o mapeador
-                updates[`quadra${i}/dirigente`] = ""; // Limpa o dirigente
+                updates[`quadra${i}/mapeador`] = "";
+                updates[`quadra${i}/dirigente`] = "";
             }
             updates['datas/inicio'] = "";
             updates['datas/fim'] = "";
@@ -341,7 +409,6 @@
                 await update(ref(db, `territorios/${bairroAtivoID}`), updates);
                 dataInicioInput.value = "";
                 dataFimInput.value = "";
-                // O onValue vai limpar os campos de quadra automaticamente
                 mostrarFeedbackSalvo();
                 alert(`Marcações do bairro ${bairroAtivoNome} reiniciadas e datas arquivadas!`);
             }catch(e){console.error(e); alert("Erro ao reiniciar marcações.");}
@@ -420,7 +487,118 @@
             }
         });
 
-        // setBairroAtivo (sem alterações)
+
+        // === NOVAS FUNÇÕES DO RELATÓRIO ADMIN ===
+        
+        // 1. Abre o modal e preenche os checkboxes dos bairros
+        function abrirModalRelatorio() {
+            relatorioConteudo.innerHTML = ""; // Limpa relatório antigo
+            imprimirRelatorioBtn.style.display = 'none'; // Esconde botão de imprimir
+            relatorioBairroSelector.innerHTML = ""; // Limpa checkboxes
+            
+            // Cria um checkbox para cada bairro
+            Object.keys(bairros).forEach(nomeBairro => {
+                const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g,'');
+                
+                const label = document.createElement("label");
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.value = bairroID;
+                checkbox.dataset.nome = nomeBairro; // Guarda o nome para o relatório
+                
+                label.appendChild(checkbox);
+                label.append(` ${nomeBairro}`);
+                relatorioBairroSelector.appendChild(label);
+            });
+            
+            relatorioModal.style.display = 'flex';
+        }
+
+        // 2. Gera o relatório
+        async function gerarRelatorio() {
+            relatorioConteudo.innerHTML = "<h4>Carregando dados...</h4>";
+            
+            // Pega todos os bairros selecionados
+            const selectedInputs = document.querySelectorAll('#relatorioBairroSelector input:checked');
+            if (selectedInputs.length === 0) {
+                relatorioConteudo.innerHTML = "<p>Por favor, selecione pelo menos um bairro.</p>";
+                return;
+            }
+            
+            try {
+                // 1. Busca TODOS os dados de territórios de uma vez
+                const snapshot = await get(ref(db, 'territorios'));
+                const allData = snapshot.val() || {};
+                
+                let html = ""; // String para construir o relatório
+
+                // 2. Loop por cada bairro selecionado
+                selectedInputs.forEach(input => {
+                    const bairroID = input.value;
+                    const nomeBairro = input.dataset.nome;
+                    const numQuadras = bairros[nomeBairro];
+                    const data = allData[bairroID] || {}; // Dados deste bairro
+
+                    html += `<h4>Relatório: ${nomeBairro}</h4>`;
+                    
+                    // 3. Adiciona o Histórico de Datas
+                    html += `<h5>Histórico de Datas:</h5>`;
+                    if (data.historico) {
+                        Object.values(data.historico).forEach(entry => {
+                            html += `<p>Início: ${entry.inicio || 'N/D'} | Fim: ${entry.fim || 'N/D'}</p>`;
+                        });
+                    } else {
+                        html += `<p>Nenhum histórico arquivado.</p>`;
+                    }
+
+                    // 4. Adiciona as Datas Atuais
+                    html += `<h5>Datas Atuais (em andamento):</h5>`;
+                    if (data.datas && data.datas.inicio) {
+                         html += `<p>Início: ${data.datas.inicio} | Fim: ${data.datas.fim || 'Aberto'}</p>`;
+                    } else {
+                        html += `<p>Nenhum trabalho atual.</p>`;
+                    }
+                    
+                    // 5. Adiciona o status de cada quadra
+                    html += `<h5>Detalhes das Quadras:</h5>`;
+                    for (let i = 1; i <= numQuadras; i++) {
+                        const quadra = data[`quadra${i}`] || {};
+                        const status = quadra.status || "Não feita";
+                        const mapeador = quadra.mapeador || "Ninguém";
+                        const dirigente = quadra.dirigente || "Nenhum";
+                        
+                        html += `<div class="quadra-item">`;
+                        html += `<p><strong>Quadra ${i}:</strong> ${status}</p>`;
+                        html += `<p style="padding-left: 15px;">Mapeador: ${mapeador} | Dirigente: ${dirigente}</p>`;
+                        html += `</div>`;
+                    }
+                });
+
+                relatorioConteudo.innerHTML = html;
+                imprimirRelatorioBtn.style.display = 'block'; // Mostra o botão de imprimir
+
+            } catch (e) {
+                console.error("Erro ao gerar relatório:", e);
+                relatorioConteudo.innerHTML = "<p>Erro ao carregar dados. Verifique a consola.</p>";
+            }
+        }
+        
+        // 3. Event Listeners do Modal Relatório
+        relatorioBtn.addEventListener('click', abrirModalRelatorio);
+        gerarRelatorioBtn.addEventListener('click', gerarRelatorio);
+        fecharRelatorioBtn.addEventListener('click', () => {
+            relatorioModal.style.display = 'none';
+        });
+        relatorioModal.addEventListener('click', (e) => {
+            if (e.target === relatorioModal) relatorioModal.style.display = 'none';
+        });
+        imprimirRelatorioBtn.addEventListener('click', () => {
+            window.print(); // Abre a janela de impressão do navegador
+        });
+        // === FIM DAS FUNÇÕES DO RELATÓRIO ===
+
+
+        // (setBairroAtivo e carregarPainel... sem alterações)
         function setBairroAtivo(bairroID,nomeBairro){
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
@@ -455,44 +633,33 @@
             sidebarMenu.classList.remove("open");
         }
 
-        // === FUNÇÃO carregarPainel ATUALIZADA ===
         function carregarPainel(){
             if(isContentLoaded) return;
             isContentLoaded=true;
-
             let primeiroBairroID=null, primeiroBairroNome=null;
 
             Object.keys(bairros).forEach((nomeBairro,index)=>{
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g,'');
-                
-                // Botão Sidebar
                 const sidebarBtn = document.createElement("button");
                 sidebarBtn.textContent = nomeBairro;
                 sidebarBtn.dataset.bairro = bairroID;
                 sidebarBairrosList.appendChild(sidebarBtn);
                 sidebarBtn.addEventListener("click", ()=>setBairroAtivo(bairroID,nomeBairro));
 
-                // Tab Content
                 const tabContent = document.createElement("div");
                 tabContent.classList.add("tab-content");
                 tabContent.id = `content-${bairroID}`;
                 conteudoBairros.appendChild(tabContent);
-
                 quadrasPorBairro[nomeBairro]={};
                 const numQuadras = bairros[nomeBairro];
                 
                 for(let i=1;i<=numQuadras;i++){
-                    // Container principal da quadra
                     const quadraContainer = document.createElement("div");
                     quadraContainer.classList.add("quadra-container");
-                    
-                    // Linha principal (Nome, Toggle, Botão Status)
                     const quadraMain = document.createElement("div");
                     quadraMain.classList.add("quadra-main");
-
                     const nomeContainer = document.createElement("div");
                     nomeContainer.classList.add("quadra-nome-container");
-                    
                     const nome = document.createElement("span");
                     nome.classList.add("quadra-nome");
                     let nomeQuadra = `Quadra ${i}`;
@@ -502,16 +669,14 @@
                     }
                     nome.textContent = nomeQuadra;
 
-                    // NOVO: Botão de Toggle para anotação
                     const toggleBtn = document.createElement("button");
                     toggleBtn.classList.add("toggle-anotacao-btn");
-                    toggleBtn.textContent = "🗒️"; // Ícone de nota
+                    toggleBtn.textContent = "🗒️";
                     toggleBtn.title = "Anotar Dirigente";
                     nomeContainer.append(nome, toggleBtn);
 
-                    // Botão de Status
                     const statusBtn = document.createElement("button");
-                    statusBtn.classList.add("status-btn"); // Nova classe
+                    statusBtn.classList.add("status-btn");
 
                     const estados=["Não feita","Em andamento","Finalizada"];
                     const cores={ "Não feita":"red","Em andamento":"orange","Finalizada":"green" };
@@ -522,23 +687,17 @@
                     }
                     atualizarBotao(statusAtual);
 
-                    // NOVO: Div de Detalhes (retrátil)
                     const detailsDiv = document.createElement("div");
                     detailsDiv.classList.add("quadra-details");
-                    
                     const dirigenteLabel = document.createElement("label");
                     dirigenteLabel.textContent = "Dirigente:";
-                    dirigenteLabel.style.fontSize = "12px";
-                    dirigenteLabel.style.fontWeight = "bold";
-                    
+                    dirigenteLabel.style.cssText = "font-size: 12px; font-weight: bold;";
                     const dirigenteInput = document.createElement("input");
                     dirigenteInput.type = "text";
                     dirigenteInput.classList.add("dirigente-input");
                     dirigenteInput.placeholder = "Nome do dirigente...";
-                    
                     detailsDiv.append(dirigenteLabel, dirigenteInput);
                     
-                    // NOVO: Texto "Salvo por"
                     const mapeadorText = document.createElement("div");
                     mapeadorText.classList.add("quadra-mapeador");
                     
@@ -546,42 +705,28 @@
                     quadraContainer.append(quadraMain, mapeadorText, detailsDiv);
                     tabContent.appendChild(quadraContainer);
 
-                    // --- LÓGICA DOS EVENTOS ---
-
-                    // 1. Lógica do Toggle de Anotação
                     toggleBtn.addEventListener('click', () => {
-                        if (detailsDiv.style.display === 'block') {
-                            detailsDiv.style.display = 'none';
-                        } else {
-                            detailsDiv.style.display = 'block';
-                        }
+                        detailsDiv.style.display = (detailsDiv.style.display === 'block') ? 'none' : 'block';
                     });
 
-                    // 2. Lógica de Salvar Anotação (Dirigente) com debounce
                     let saveDirigenteTimeout;
                     dirigenteInput.addEventListener('input', () => {
                         clearTimeout(saveDirigenteTimeout);
                         saveDirigenteTimeout = setTimeout(() => {
                             const dirigenteRef = ref(db, `territorios/${bairroID}/quadra${i}/dirigente`);
                             set(dirigenteRef, dirigenteInput.value).then(mostrarFeedbackSalvo);
-                        }, 1000); // Salva 1 segundo após parar de digitar
+                        }, 1000);
                     });
 
-                    // 3. Lógica do Botão de Status (agora salva o 'mapeador')
                     statusBtn.addEventListener("click", ()=>{
                         const idx=estados.indexOf(statusAtual);
                         statusAtual=estados[(idx+1)%estados.length];
                         atualizarBotao(statusAtual);
                         
-                        // Salva o status E o nome do mapeador logado
-                        const dadosUpdate = {
-                            status: statusAtual,
-                            mapeador: currentUserName // Salva o nome do usuário logado
-                        };
+                        const dadosUpdate = { status: statusAtual, mapeador: currentUserName };
                         update(ref(db, `territorios/${bairroID}/quadra${i}`), dadosUpdate).then(mostrarFeedbackSalvo);
                     });
 
-                    // 4. Lógica de Carregar Dados (Status, Dirigente e Mapeador)
                     const quadraRef = ref(db, `territorios/${bairroID}/quadra${i}`);
                     onValue(quadraRef, snap=>{
                         const data = snap.val() || {};
@@ -594,7 +739,7 @@
                         dirigenteInput.value = dirigente;
                         mapeadorText.textContent = mapeador ? `(Salvo por: ${mapeador})` : "";
                         
-                        quadrasPorBairro[nomeBairro][i] = statusBtn; // (Mantém referência se precisar)
+                        quadrasPorBairro[nomeBairro][i] = statusBtn;
                     });
                 }
 
@@ -604,14 +749,26 @@
             if(primeiroBairroID) setBairroAtivo(primeiroBairroID,primeiroBairroNome);
         }
 
-        // === onAuthStateChanged ATUALIZADO (para guardar o nome do usuário) ===
+        // === onAuthStateChanged ATUALIZADO (com verificação de Admin) ===
         onAuthStateChanged(auth,user=>{
             if(user) {
-                // Guarda o nome do usuário numa variável global
                 currentUserName = user.displayName || "Usuário"; 
-                
                 welcomeMessage.textContent = `Olá, ${currentUserName}!`;
+
+                // --- Verificação de Admin ---
+                // Lista de emails que têm acesso de administrador
+                const adminEmails = [
+                    "alexandremarcondes58@gmail.com",
+                    "matheushenriquedefaccimarconde@gmail.com"
+                ];
                 
+                // Verifica se o email do usuário logado está na lista
+                if (adminEmails.includes(user.email)) {
+                    // Se estiver, mostra o botão de relatório
+                    relatorioBtn.style.display = 'block';
+                }
+                // --- Fim da Verificação ---
+
                 carregarPainel();
             }
             else {
@@ -624,9 +781,9 @@
         });
 
     </script>
-    
 </body>
 </html>
+
 
 
 
