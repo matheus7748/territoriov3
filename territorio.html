@@ -329,33 +329,33 @@
             "Vista Bonita D": 11
         };
 
-        // 🖼️ MAPA DE NOMES DE ARQUIVO (Ajustado para a extensão .jpg)
+        // 🖼️ MAPA DE NOMES DE ARQUIVO (CORRIGIDO PARA JPEG E ERRO DE SINTAXE)
         const mapaNomesArquivos = {
-            "ComercialCentro": "comercial(centro).jpg",
-            "ComercialVilaSãoJorge": "comercial(vilasãojorge).jpg",
-            "VilaBrasil": "vilabrasil.jpg",
-            "VilaIti": "vilaiti.jpg",
-            "CinquentenárioA": "cinquentenarioA.jpg",
-            "CinquentenárioB": "cinquentenarioB.jpg",
-            "VilaMendes": "vilamendes.jpg",
-            "VilaLusoA": "vilalusoA.jpg",
-            "VilaLusoB": "vilalusoB.jpg",
-            "VilaRainho": "vilarainho.jpg",
-            "SãoDomingos": "saodomingos.jpg",
-            "JardimPlanaltina": "jardimplanaltina.jpg",
-            "SãoBento": "saobento.jpg",
-            "ParqueAlvoradaA": "pqalvoradaA.jpg",
-            "ParqueAlvoradaB": "pqalvoradaB.jpg",
-            "SantaMônica": "santamônica.jpg",
-            "Sumaré": "sumare.jpg",
-            "SouzaReis": "souzareis.jpg",
-            "Itapuã": "itapua.jpg",
-            "Itapura": "itapura.jpg",
-            "PqdosResedás": "pqdosresedas.jpg",
-            "VistaBonitaA": "vistabonitaA.jpg",
-            "VistaBonitaB": "vistabonitaB.jpg",
-            "VistaBonitaC": "vistabonitaC.jpg",
-            "VistaBonitaD": "vistabonitaD.jpg"
+            "ComercialCentro": "comercial(centro).jpeg",
+            "ComercialVilaSoJorge": "comercial(vilasãojorge).jpeg",
+            "VilaBrasil": "vilabrasil.jpeg",
+            "VilaIti": "vilaiti.jpeg",
+            "CinquentenrioA": "cinquentenarioA.jpeg",
+            "CinquentenrioB": "cinquentenarioB.jpeg",
+            "VilaMendes": "vilamendes.jpeg",
+            "VilaLusoA": "vilalusoA.jpeg",
+            "VilaLusoB": "vilalusoB.jpeg",
+            "VilaRainho": "vilarainho.jpeg",
+            "SoDomingos": "saodomingos.jpeg",
+            "JardimPlanaltina": "jardimplanaltina.jpeg",
+            "SoBento": "saobento.jpeg",
+            "ParqueAlvoradaA": "pqalvoradaA.jpeg",
+            "ParqueAlvoradaB": "pqalvoradaB.jpeg",
+            "SantaMnica": "santamônica.jpeg",
+            "Sumar": "sumare.jpeg", // ERRO DE SINTAXE CORRIGIDO AQUI
+            "SouzaReis": "souzareis.jpeg",
+            "Itapu": "itapua.jpeg",
+            "Itapura": "itapura.jpeg",
+            "PqdosReseds": "pqdosresedas.jpeg",
+            "VistaBonitaA": "vistabonitaA.jpeg",
+            "VistaBonitaB": "vistabonitaB.jpeg",
+            "VistaBonitaC": "vistabonitaC.jpeg",
+            "VistaBonitaD": "vistabonitaD.jpeg"
         };
 
 
@@ -403,9 +403,10 @@
         function atualizarImagemGeral(bairroID) {
             const filename = mapaNomesArquivos[bairroID];
             if (filename) {
-                // CORRIGIDO PARA O NOVO REPOSITÓRIO: /territoriov3/
+                // Caminho configurado para o repositório /territoriov3/
                 mapaImgElement.src = `/territoriov3/bairro_maps/${filename}`; 
             } else {
+                console.warn(`Nome de arquivo não encontrado no mapa para o ID: ${bairroID}`);
                 mapaImgElement.src = urlMapaGeral; 
             }
         }
@@ -426,7 +427,7 @@
             }
 
             try {
-                const bairroRef = ref(db, `territorios/${bairroAtivoID}`);
+                const bairroRef = ref(db, `territorios/${bairroID}`);
                 await update(bairroRef, updates);
                 mostrarFeedbackSalvo(); 
                 alert(`Marcações do bairro ${bairroAtivoNome} limpas com sucesso!`);
@@ -497,7 +498,7 @@
             
             // 1. Cria a estrutura de quadras no painel e botões na sidebar
             Object.keys(bairros).forEach((nomeBairro, index) => {
-                const numQuadras = bairros[nomeBairro];
+                // GERA O BAIRROID (REMOVENDO ACENTOS E ESPAÇOS)
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g, '');
 
                 // A. Cria o botão na SIDEBAR
@@ -616,7 +617,7 @@
             if (user) {
                 carregarPainel();
             } else {
-                // CORRIGIDO PARA O NOVO REPOSITÓRIO: /territoriov3/
+                // Caminho configurado para /territoriov3/
                 window.location.href = "/territoriov3/index.html"; 
             }
         });
@@ -629,4 +630,9 @@
     </script>
 
 </body>
+</html>
+    </script>
+
+</body>
+
 </html>
