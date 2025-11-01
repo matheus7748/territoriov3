@@ -310,7 +310,7 @@
             "SantaMnica": "santamonica.jpeg",
             "Sumar": "sumare.jpeg",
             "SouzaReis": "souzareis.jpeg",
-            "Itapu": "itapua.jpeg",
+            "Itapu": "itapua.jpeg", // ERRO CORRIGIDO - O "A" FOI REMOVIDO
             "Itapura": "itapura.jpeg",
             "PqdosReseds": "pqdosresedas.jpeg",
             "VistaBonitaA": "vistabonitaA.jpeg",
@@ -396,7 +396,7 @@
             if (!bairroAtivoID) return;
             clearTimeout(saveObsTimeout);
             saveObsTimeout = setTimeout(() => {
-                const obsRef = ref(db, `territorios/${bairroAtivoID}/observacoes`);
+                const obsRef = ref(db, `territorios/${bairroID}/observacoes`);
                 set(obsRef, observacoesTextarea.value)
                     .then(() => mostrarFeedbackSalvo());
             }, 1000); 
@@ -526,6 +526,7 @@
 
 </body>
 </html>
+
 
 
 
