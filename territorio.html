@@ -51,8 +51,10 @@
         }
         #datasContainer label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
         #datasContainer input[type="date"] { width: 100%; padding: 8px; border: 1px solid #ccc;
-            border-radius: 4px; margin-bottom: 10px;
+            border-radius: 4px;
         }
+        .data-saved-by { font-size: 11px; color: #555; margin-bottom: 10px; height: 12px; }
+        
         #observacoesTextarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc;
             border-radius: 4px; resize: vertical; font-size: 14px;
         }
@@ -79,7 +81,6 @@
             text-align: right; margin-top: 4px;
         }
         
-        /* Botões de Ação */
         .logout, .reset-btn, #verHistoricoBtn, #relatorioBtn {
             display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
             margin-top: 10px; font-weight: bold; cursor: pointer;
@@ -89,11 +90,7 @@
         .reset-btn:hover { background-color: #c9302c; }
         #verHistoricoBtn { background-color: #6c757d; display: none; }
         #verHistoricoBtn:hover { background-color: #5a6268; }
-
-        #relatorioBtn { /* Botão Admin */
-            background-color: #007bff; /* Azul */
-            display: none; /* Começa escondido por padrão */
-        }
+        #relatorioBtn { background-color: #007bff; display: none; }
         #relatorioBtn:hover { background-color: #0056b3; }
         
         .tab-content { display: none; } .tab-content.active { display: block; }
@@ -104,7 +101,6 @@
         }
         #salvarFeedback.show { opacity: 1; visibility: visible; }
 
-        /* Estilos do Modal (Histórico e Relatório) */
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2100;
@@ -113,10 +109,7 @@
         .modal-content { background: white; border-radius: 8px; padding: 20px;
             width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto;
         }
-        /* NOVO: Modal de Relatório maior */
-        .modal-content-large {
-            max-width: 800px; /* Mais largo */
-        }
+        .modal-content-large { max-width: 800px; }
         .modal-header { display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;
         }
@@ -132,41 +125,70 @@
             line-height: 25px; text-align: center;
         }
 
-        /* === NOVOS ESTILOS PARA O RELATÓRIO === */
+        /* === NOVOS ESTILOS PARA RELATÓRIO VISUAL === */
         #relatorioBairroSelector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 colunas */
-            gap: 10px;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 15px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+            max-height: 200px; overflow-y: auto; border: 1px solid #ddd;
+            padding: 10px; margin-bottom: 15px;
         }
-        #relatorioBairroSelector label {
-            display: block;
-            font-size: 14px;
-        }
+        #relatorioBairroSelector label { display: block; font-size: 14px; }
         #gerarRelatorioBtn, #imprimirRelatorioBtn {
              background-color: #28a745; color: white; border: none; padding: 10px;
              border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;
         }
         #imprimirRelatorioBtn { background-color: #007bff; }
-        
-        #relatorioConteudo {
-            margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 15px;
-        }
-        #relatorioConteudo h4 {
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 15px;
+        #relatorioConteudo { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 15px; }
+        #relatorioConteudo h4 { background-color: #f0f0f0; padding: 10px;
+            border-radius: 5px; margin-top: 15px;
         }
         #relatorioConteudo h5 { margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
         #relatorioConteudo p { font-size: 13px; margin: 4px 0; }
-        #relatorioConteudo .quadra-item { margin-bottom: 10px; }
+        
+        /* Sumário do Relatório */
+        .relatorio-summary {
+            border: 1px solid #ddd;
+            background: #fdfdfd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .relatorio-summary p { margin: 5px 0; font-size: 14px; }
+        
+        /* Barra de Progresso */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 20px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #28a745; /* Verde */
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+        
+        /* Tabela de Detalhes */
+        .relatorio-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .relatorio-table th, .relatorio-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: left;
+        }
+        .relatorio-table th {
+            background-color: #f8f8f8;
+        }
         /* === FIM ESTILOS RELATÓRIO === */
 
         @media (max-width: 768px) {
@@ -175,37 +197,27 @@
             .mapa img { max-height: 40vh; object-fit: contain; }
             #menuToggle { top: 10px; left: 10px; }
             .painel { max-height: 80vh; }
-            #relatorioBairroSelector { grid-template-columns: 1fr; } /* 1 coluna no mobile */
+            #relatorioBairroSelector { grid-template-columns: 1fr; } 
         }
         
-        /* === NOVO: ESTILO DE IMPRESSÃO === */
         @media print {
             body, .mapa, .painel, #sidebarMenu, #menuToggle, #historicoModal {
-                display: none !important; /* Esconde tudo */
+                display: none !important;
             }
             #relatorioModal, .modal-backdrop {
-                display: block !important;
-                position: static;
-                box-shadow: none;
-                border: none;
-                background: none;
-                height: auto;
-                width: 100%;
+                display: block !important; position: static; box-shadow: none;
+                border: none; background: none; height: auto; width: 100%;
             }
             #relatorioModal .modal-content {
-                box-shadow: none;
-                border: none;
-                max-width: 100%;
-                max-height: none;
+                box-shadow: none; border: none; max-width: 100%; max-height: none;
             }
-            /* Esconde os botões de controle na impressão */
             .modal-header .modal-close, #gerarRelatorioBtn, #imprimirRelatorioBtn, #relatorioBairroSelector {
                 display: none !important;
             }
             .modal-header h3 { font-size: 24px; }
             #relatorioConteudo { margin-top: 0; border: none; }
+            .relatorio-table { font-size: 10px; } /* Diminui fonte na impressão */
         }
-
     </style>
 </head>
 <body>
@@ -229,8 +241,11 @@
         <div id="datasContainer">
             <label for="dataInicio">Início do território (Atual):</label>
             <input type="date" id="dataInicio">
+            <div id="dataInicioPor" class="data-saved-by"></div>
+            
             <label for="dataFim">Fim do território (Atual):</label>
             <input type="date" id="dataFim">
+            <div id="dataFimPor" class="data-saved-by"></div>
         </div>
         
         <div id="observacoesContainer">
@@ -266,23 +281,20 @@
             </div>
             
             <h4>1. Selecione os Bairros</h4>
-            <div id="relatorioBairroSelector">
-                </div>
+            <div id="relatorioBairroSelector"></div>
             <button id="gerarRelatorioBtn">Gerar Relatório</button>
 
-            <div id="relatorioConteudo">
-                </div>
+            <div id="relatorioConteudo"></div>
             
             <button id="imprimirRelatorioBtn" style="display: none;">Imprimir Relatório</button>
         </div>
     </div>
+
     <script type="module">
-        // === ATUALIZADO: Importa 'get' para buscar todos os dados de uma vez ===
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, update, push, remove, get } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-        // (Config, Bairros, Nomes Arquivos... sem alterações)
         const firebaseConfig = {
             apiKey: "AIzaSyCjSNz59SgzJwzqndzOJO4GRqHZ3-6abGM",
             authDomain: "login-territorios.firebaseapp.com",
@@ -295,15 +307,37 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app); 
         const auth = getAuth(app);    
+
+        // === CORREÇÃO DAS QUADRAS ===
         const bairros = {
-            "Comercial (Centro)": 15, "Comercial (Vila São Jorge)": 19, "Vila Brasil": 21,
-            "Vila Iti": 13, "Cinquentenário A": 4, "Cinquentenário B": 6, "Vila Mendes": 8,
-            "Vila Luso A": 11, "Vila Luso B": 10, "Vila Rainho": 11, "São Domingos": 13,
-            "Jardim Planaltina": 19, "São Bento": 8, "Parque Alvorada A": 21, "Parque Alvorada B": 15,
-            "Santa Mônica": 19, "Sumaré": 17, "Souza Reis": 18, "Itapuã": 11, "Itapura": 4,
-            "Pq. dos Resedás": 1, "Vista Bonita A": 14, "Vista Bonita B": 5, "Vista Bonita C": 11,
+            "Comercial (Centro)": 19, // Alterado de 15 para 19
+            "Comercial (Vila São Jorge)": 15, // Alterado de 19 para 15
+            "Vila Brasil": 21,
+            "Vila Iti": 13,
+            "Cinquentenário A": 4,
+            "Cinquentenário B": 6,
+            "Vila Mendes": 8,
+            "Vila Luso A": 11,
+            "Vila Luso B": 10,
+            "Vila Rainho": 11,
+            "São Domingos": 13,
+            "Jardim Planaltina": 19,
+            "São Bento": 8,
+            "Parque Alvorada A": 21,
+            "Parque Alvorada B": 15,
+            "Santa Mônica": 19,
+            "Sumaré": 17,
+            "Souza Reis": 18,
+            "Itapuã": 11,
+            "Itapura": 4,
+            "Pq. dos Resedás": 1,
+            "Vista Bonita A": 14,
+            "Vista Bonita B": 5,
+            "Vista Bonita C": 11,
             "Vista Bonita D": 11
         };
+        // === FIM DA CORREÇÃO ===
+
         const mapaNomesArquivos = {
             "ComercialCentro": "comercialcentro.jpeg",
             "ComercialVilaSoJorge": "comercialvilasaojorge.jpeg",
@@ -347,13 +381,13 @@
         const datasContainer = document.getElementById("datasContainer");
         const dataInicioInput = document.getElementById("dataInicio");
         const dataFimInput = document.getElementById("dataFim");
+        const dataInicioPor = document.getElementById("dataInicioPor");
+        const dataFimPor = document.getElementById("dataFimPor");
         const verHistoricoBtn = document.getElementById("verHistoricoBtn");
         const historicoModal = document.getElementById("historicoModal");
         const fecharModalBtn = document.getElementById("fecharModalBtn");
         const historicoLista = document.getElementById("historicoLista");
         const welcomeMessage = document.getElementById("welcomeMessage");
-        
-        // === NOVAS VARIÁVEIS DO RELATÓRIO ===
         const relatorioBtn = document.getElementById("relatorioBtn");
         const relatorioModal = document.getElementById("relatorioModal");
         const fecharRelatorioBtn = document.getElementById("fecharRelatorioBtn");
@@ -368,7 +402,7 @@
         let isContentLoaded = false; 
         let currentUserName = null;
 
-        // (Funções do Menu, Feedback, Imagem, Reiniciar/Arquivar, Salvar Datas, Histórico... sem alterações)
+        // (Funções do Menu, Feedback, Imagem... sem alterações)
         menuToggle.addEventListener("click", ()=>sidebarMenu.classList.add("open"));
         closeMenuBtn.addEventListener("click", ()=>sidebarMenu.classList.remove("open"));
 
@@ -384,15 +418,23 @@
             mapaImgElement.src = filename ? `/territoriov3/bairro_maps/${filename}` : urlMapaGeral;
         }
 
+        // (Função Reiniciar, Salvar Observações, Salvar Datas, Histórico... sem alterações)
         async function limparMarcacoes(){
             if(!bairroAtivoID || !bairroAtivoNome) return;
             if(!confirm(`Tem certeza que deseja REINICIAR TODAS as marcações e ARQUIVAR as datas atuais do bairro ${bairroAtivoNome}?`)) return;
             
-            const inicioVal = dataInicioInput.value;
-            const fimVal = dataFimInput.value;
-            if (inicioVal) { 
+            const datasRef = ref(db, `territorios/${bairroAtivoID}/datas`);
+            const datasSnapshot = await get(datasRef);
+            const datasAtuais = datasSnapshot.val() || {};
+
+            if (datasAtuais.inicio) { 
                 const historicoRef = ref(db, `territorios/${bairroAtivoID}/historico`);
-                await push(historicoRef, { inicio: inicioVal, fim: fimVal || "" });
+                await push(historicoRef, { 
+                    inicio: datasAtuais.inicio, 
+                    fim: datasAtuais.fim || "",
+                    inicioPor: datasAtuais.inicioPor || "N/D",
+                    fimPor: datasAtuais.fimPor || ""
+                });
             }
 
             const numQuadras = bairros[bairroAtivoNome];
@@ -402,13 +444,14 @@
                 updates[`quadra${i}/mapeador`] = "";
                 updates[`quadra${i}/dirigente`] = "";
             }
-            updates['datas/inicio'] = "";
-            updates['datas/fim'] = "";
+            updates['datas'] = { inicio: "", fim: "", inicioPor: "", fimPor: "" };
 
             try{
                 await update(ref(db, `territorios/${bairroAtivoID}`), updates);
                 dataInicioInput.value = "";
                 dataFimInput.value = "";
+                dataInicioPor.textContent = "";
+                dataFimPor.textContent = "";
                 mostrarFeedbackSalvo();
                 alert(`Marcações do bairro ${bairroAtivoNome} reiniciadas e datas arquivadas!`);
             }catch(e){console.error(e); alert("Erro ao reiniciar marcações.");}
@@ -424,33 +467,37 @@
             },1000);
         });
 
-        function salvarDatas() {
+        dataInicioInput.addEventListener('change', () => {
             if (!bairroAtivoID) return;
-            const datasRef = ref(db, `territorios/${bairroAtivoID}/datas`);
-            const data = { inicio: dataInicioInput.value, fim: dataFimInput.value };
-            set(datasRef, data).then(mostrarFeedbackSalvo);
-        }
-        dataInicioInput.addEventListener('change', salvarDatas);
-        dataFimInput.addEventListener('change', salvarDatas);
+            const data = { inicio: dataInicioInput.value, inicioPor: currentUserName };
+            update(ref(db, `territorios/${bairroAtivoID}/datas`), data).then(() => {
+                mostrarFeedbackSalvo();
+                dataInicioPor.textContent = `(Salvo por: ${currentUserName})`;
+            });
+        });
+        
+        dataFimInput.addEventListener('change', () => {
+            if (!bairroAtivoID) return;
+            const data = { fim: dataFimInput.value, fimPor: currentUserName };
+            update(ref(db, `territorios/${bairroAtivoID}/datas`), data).then(() => {
+                mostrarFeedbackSalvo();
+                dataFimPor.textContent = `(Salvo por: ${currentUserName})`;
+            });
+        });
 
         async function excluirEntradaHistorico(key) {
             if (!bairroAtivoID || !key) return;
             if (!confirm("Tem certeza que deseja excluir esta entrada do histórico?")) return;
             
             try {
-                const entradaRef = ref(db, `territorios/${bairroAtivoID}/historico/${key}`);
-                await remove(entradaRef);
+                await remove(ref(db, `territorios/${bairroAtivoID}/historico/${key}`));
                 mostrarFeedbackSalvo();
                 abrirModalHistorico();
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao excluir entrada.");
-            }
+            } catch (e) { console.error(e); alert("Erro ao excluir entrada."); }
         }
 
         function abrirModalHistorico() {
             if (!bairroAtivoID) return;
-            
             const historicoRef = ref(db, `territorios/${bairroAtivoID}/historico`);
             onValue(historicoRef, (snapshot) => {
                 historicoLista.innerHTML = ""; 
@@ -461,7 +508,8 @@
                         const item = document.createElement("li");
                         item.classList.add("historico-item");
                         const texto = document.createElement("span");
-                        texto.textContent = `Início: ${data.inicio || 'N/D'} | Fim: ${data.fim || 'N/D'}`;
+                        texto.innerHTML = `Início: ${data.inicio || 'N/D'} (por: ${data.inicioPor || 'N/D'}) <br> 
+                                         Fim: ${data.fim || 'N/D'} ${data.fimPor ? `(por: ${data.fimPor})` : ''}`;
                         const deleteBtn = document.createElement("button");
                         deleteBtn.classList.add("historico-delete-btn");
                         deleteBtn.innerHTML = "&times;"; 
@@ -478,47 +526,33 @@
         }
 
         verHistoricoBtn.addEventListener('click', abrirModalHistorico);
-        fecharModalBtn.addEventListener('click', () => {
-            historicoModal.style.display = 'none';
-        });
+        fecharModalBtn.addEventListener('click', () => historicoModal.style.display = 'none');
         historicoModal.addEventListener('click', (e) => {
-            if (e.target === historicoModal) {
-                historicoModal.style.display = 'none';
-            }
+            if (e.target === historicoModal) historicoModal.style.display = 'none';
         });
 
-
-        // === NOVAS FUNÇÕES DO RELATÓRIO ADMIN ===
-        
-        // 1. Abre o modal e preenche os checkboxes dos bairros
+        // === FUNÇÕES DO RELATÓRIO ADMIN ATUALIZADAS (NOVO LAYOUT) ===
         function abrirModalRelatorio() {
-            relatorioConteudo.innerHTML = ""; // Limpa relatório antigo
-            imprimirRelatorioBtn.style.display = 'none'; // Esconde botão de imprimir
-            relatorioBairroSelector.innerHTML = ""; // Limpa checkboxes
+            relatorioConteudo.innerHTML = ""; 
+            imprimirRelatorioBtn.style.display = 'none'; 
+            relatorioBairroSelector.innerHTML = "";
             
-            // Cria um checkbox para cada bairro
             Object.keys(bairros).forEach(nomeBairro => {
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g,'');
-                
                 const label = document.createElement("label");
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.value = bairroID;
-                checkbox.dataset.nome = nomeBairro; // Guarda o nome para o relatório
-                
+                checkbox.dataset.nome = nomeBairro;
                 label.appendChild(checkbox);
                 label.append(` ${nomeBairro}`);
                 relatorioBairroSelector.appendChild(label);
             });
-            
             relatorioModal.style.display = 'flex';
         }
 
-        // 2. Gera o relatório
         async function gerarRelatorio() {
             relatorioConteudo.innerHTML = "<h4>Carregando dados...</h4>";
-            
-            // Pega todos os bairros selecionados
             const selectedInputs = document.querySelectorAll('#relatorioBairroSelector input:checked');
             if (selectedInputs.length === 0) {
                 relatorioConteudo.innerHTML = "<p>Por favor, selecione pelo menos um bairro.</p>";
@@ -526,56 +560,101 @@
             }
             
             try {
-                // 1. Busca TODOS os dados de territórios de uma vez
                 const snapshot = await get(ref(db, 'territorios'));
                 const allData = snapshot.val() || {};
-                
-                let html = ""; // String para construir o relatório
+                let html = ""; 
 
-                // 2. Loop por cada bairro selecionado
                 selectedInputs.forEach(input => {
                     const bairroID = input.value;
                     const nomeBairro = input.dataset.nome;
                     const numQuadras = bairros[nomeBairro];
-                    const data = allData[bairroID] || {}; // Dados deste bairro
+                    const data = allData[bairroID] || {}; 
 
                     html += `<h4>Relatório: ${nomeBairro}</h4>`;
                     
-                    // 3. Adiciona o Histórico de Datas
+                    // --- Variáveis para o sumário ---
+                    let finalizadas = 0;
+                    let emAndamento = 0;
+                    const mapeadores = new Set();
+                    const dirigentes = new Set();
+                    let tableRowsHtml = "";
+
+                    // --- Loop pelas quadras para calcular sumário E criar linhas da tabela ---
+                    for (let i = 1; i <= numQuadras; i++) {
+                        const quadra = data[`quadra${i}`] || {};
+                        const status = quadra.status || "Não feita";
+                        const mapeador = quadra.mapeador || "---";
+                        const dirigente = quadra.dirigente || "---";
+                        
+                        // Cálculos
+                        if (status === "Finalizada") finalizadas++;
+                        if (status === "Em andamento") emAndamento++;
+                        if (mapeador !== "---") mapeadores.add(mapeador);
+                        if (dirigente !== "---") dirigentes.add(dirigente);
+                        
+                        // Linha da tabela
+                        tableRowsHtml += `<tr>
+                            <td>Quadra ${i}</td>
+                            <td>${status}</td>
+                            <td>${mapeador}</td>
+                            <td>${dirigente}</td>
+                        </tr>`;
+                    }
+                    
+                    const percent = (finalizadas / numQuadras) * 100;
+                    const naoFeitas = numQuadras - finalizadas - emAndamento;
+
+                    // --- 1. SUMÁRIO DE PROGRESSO (NOVO) ---
+                    html += `<div class="relatorio-summary">
+                        <strong>${percent.toFixed(0)}% Concluído</strong>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${percent}%;">${percent.toFixed(0)}%</div>
+                        </div>
+                        <p>
+                            <strong>Finalizadas:</strong> ${finalizadas} | 
+                            <strong>Em Andamento:</strong> ${emAndamento} | 
+                            <strong>Não Feitas:</strong> ${naoFeitas}
+                        </p>
+                        <p><strong>Mapeadores:</strong> ${mapeadores.size > 0 ? [...mapeadores].join(', ') : 'Nenhum'}</p>
+                        <p><strong>Dirigentes:</strong> ${dirigentes.size > 0 ? [...dirigentes].join(', ') : 'Nenhum'}</p>
+                    </div>`;
+                    
+                    // --- 2. DATAS (igual, mas com nomes) ---
                     html += `<h5>Histórico de Datas:</h5>`;
-                    if (data.historico) {
+                    if (data.historico && Object.keys(data.historico).length > 0) {
                         Object.values(data.historico).forEach(entry => {
-                            html += `<p>Início: ${entry.inicio || 'N/D'} | Fim: ${entry.fim || 'N/D'}</p>`;
+                            html += `<p>Início: ${entry.inicio || 'N/D'} (por: ${entry.inicioPor || 'N/D'}) | Fim: ${entry.fim || 'N/D'} ${entry.fimPor ? `(por: ${entry.fimPor})` : ''}</p>`;
                         });
                     } else {
                         html += `<p>Nenhum histórico arquivado.</p>`;
                     }
-
-                    // 4. Adiciona as Datas Atuais
                     html += `<h5>Datas Atuais (em andamento):</h5>`;
                     if (data.datas && data.datas.inicio) {
-                         html += `<p>Início: ${data.datas.inicio} | Fim: ${data.datas.fim || 'Aberto'}</p>`;
+                         html += `<p>Início: ${data.datas.inicio} (por: ${data.datas.inicioPor || 'N/D'})</p>`;
+                         html += `<p>Fim: ${data.datas.fim || 'Aberto'} ${data.datas.fimPor ? `(por: ${data.datas.fimPor})` : ''}</p>`;
                     } else {
                         html += `<p>Nenhum trabalho atual.</p>`;
                     }
                     
-                    // 5. Adiciona o status de cada quadra
-                    html += `<h5>Detalhes das Quadras:</h5>`;
-                    for (let i = 1; i <= numQuadras; i++) {
-                        const quadra = data[`quadra${i}`] || {};
-                        const status = quadra.status || "Não feita";
-                        const mapeador = quadra.mapeador || "Ninguém";
-                        const dirigente = quadra.dirigente || "Nenhum";
-                        
-                        html += `<div class="quadra-item">`;
-                        html += `<p><strong>Quadra ${i}:</strong> ${status}</p>`;
-                        html += `<p style="padding-left: 15px;">Mapeador: ${mapeador} | Dirigente: ${dirigente}</p>`;
-                        html += `</div>`;
-                    }
+                    // --- 3. TABELA DETALHADA (NOVO) ---
+                    html += `<h5>Detalhes das Quadras:</h5>
+                        <table class="relatorio-table">
+                            <thead>
+                                <tr>
+                                    <th>Quadra</th>
+                                    <th>Status</th>
+                                    <th>Mapeador (Quem fez)</th>
+                                    <th>Dirigente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRowsHtml}
+                            </tbody>
+                        </table>`;
                 });
 
                 relatorioConteudo.innerHTML = html;
-                imprimirRelatorioBtn.style.display = 'block'; // Mostra o botão de imprimir
+                imprimirRelatorioBtn.style.display = 'block';
 
             } catch (e) {
                 console.error("Erro ao gerar relatório:", e);
@@ -583,27 +662,21 @@
             }
         }
         
-        // 3. Event Listeners do Modal Relatório
         relatorioBtn.addEventListener('click', abrirModalRelatorio);
         gerarRelatorioBtn.addEventListener('click', gerarRelatorio);
-        fecharRelatorioBtn.addEventListener('click', () => {
-            relatorioModal.style.display = 'none';
-        });
+        fecharRelatorioBtn.addEventListener('click', () => relatorioModal.style.display = 'none');
         relatorioModal.addEventListener('click', (e) => {
             if (e.target === relatorioModal) relatorioModal.style.display = 'none';
         });
-        imprimirRelatorioBtn.addEventListener('click', () => {
-            window.print(); // Abre a janela de impressão do navegador
-        });
+        imprimirRelatorioBtn.addEventListener('click', () => window.print());
         // === FIM DAS FUNÇÕES DO RELATÓRIO ===
 
 
-        // (setBairroAtivo e carregarPainel... sem alterações)
+        // (setBairroAtivo - Atualizado para carregar nomes das datas)
         function setBairroAtivo(bairroID,nomeBairro){
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
             bairroTitulo.textContent = nomeBairro;
-            
             resetBtn.textContent = `Reiniciar marcações (${nomeBairro})`;
             
             resetBtn.style.display='block';
@@ -627,12 +700,15 @@
                     const datas = snap.val() || {};
                     dataInicioInput.value = datas.inicio || "";
                     dataFimInput.value = datas.fim || "";
+                    dataInicioPor.textContent = datas.inicioPor ? `(Salvo por: ${datas.inicioPor})` : "";
+                    dataFimPor.textContent = datas.fimPor ? `(Salvo por: ${datas.fimPor})` : "";
                 }
             }, {onlyOnce:true});
 
             sidebarMenu.classList.remove("open");
         }
 
+        // (carregarPainel - sem alterações)
         function carregarPainel(){
             if(isContentLoaded) return;
             isContentLoaded=true;
@@ -736,7 +812,10 @@
                         
                         statusAtual=val;
                         atualizarBotao(statusAtual);
-                        dirigenteInput.value = dirigente;
+                        
+                        if (document.activeElement !== dirigenteInput) {
+                            dirigenteInput.value = dirigente;
+                        }
                         mapeadorText.textContent = mapeador ? `(Salvo por: ${mapeador})` : "";
                         
                         quadrasPorBairro[nomeBairro][i] = statusBtn;
@@ -749,25 +828,20 @@
             if(primeiroBairroID) setBairroAtivo(primeiroBairroID,primeiroBairroNome);
         }
 
-        // === onAuthStateChanged ATUALIZADO (com verificação de Admin) ===
+        // onAuthStateChanged (sem alterações)
         onAuthStateChanged(auth,user=>{
             if(user) {
                 currentUserName = user.displayName || "Usuário"; 
                 welcomeMessage.textContent = `Olá, ${currentUserName}!`;
 
-                // --- Verificação de Admin ---
-                // Lista de emails que têm acesso de administrador
                 const adminEmails = [
                     "alexandremarcondes58@gmail.com",
                     "matheushenriquedefaccimarconde@gmail.com"
                 ];
                 
-                // Verifica se o email do usuário logado está na lista
                 if (adminEmails.includes(user.email)) {
-                    // Se estiver, mostra o botão de relatório
                     relatorioBtn.style.display = 'block';
                 }
-                // --- Fim da Verificação ---
 
                 carregarPainel();
             }
@@ -783,6 +857,7 @@
     </script>
 </body>
 </html>
+
 
 
 
