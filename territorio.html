@@ -243,6 +243,10 @@
     <div id="salvarFeedback">Salvo! (Instantâneo)</div>
 
     <script type="module">
+        // ----- DEBUG -----
+        console.log("Script 'territorio.html' v.DEBUG (15:35) carregado.");
+        // -----------------
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
@@ -290,8 +294,7 @@
             "Vista Bonita D": 11
         };
 
-        // 🖼️ MAPA DE NOMES DE ARQUIVO (CORRIGIDO PARA NOMES "LIMPOS", SEM ACENTOS/PARÊNTESES)
-        // O código vai procurar por estes nomes. Renomeie seus arquivos no GitHub para bater com esta lista!
+        // (Mapa de Nomes de Ficheiro - Sem alterações)
         const mapaNomesArquivos = {
             "ComercialCentro": "comercialcentro.jpeg",
             "ComercialVilaSoJorge": "comercialvilasaojorge.jpeg",
@@ -308,11 +311,10 @@
             "SoBento": "saobento.jpeg",
             "ParqueAlvoradaA": "pqalvoradaA.jpeg",
             "ParqueAlvoradaB": "pqalvoradaB.jpeg",
-            "SantaMnica": "santamonica.jpeg", // Removido o 'ô'
+            "SantaMnica": "santamonica.jpeg",
             "Sumar": "sumare.jpeg",
             "SouzaReis": "souzareis.jpeg",
             "Itapu": "itapua.jpeg",
-A
             "Itapura": "itapura.jpeg",
             "PqdosReseds": "pqdosresedas.jpeg",
             "VistaBonitaA": "vistabonitaA.jpeg",
@@ -362,14 +364,33 @@ A
             }, 2000); 
         }
         
-        // 🖼️ FUNÇÃO DE ATUALIZAÇÃO DA IMAGEM GERAL DO BAIRRO
+        // 🖼️ FUNÇÃO DE ATUALIZAÇÃO DA IMAGEM (COM DEBUGGING)
         function atualizarImagemGeral(bairroID) {
+            
+            // ----- DEBUG -----
+            console.log("---------------------------------");
+            console.log("FUNÇÃO ATUALIZAR IMAGEM CHAMADA");
+            console.log("Procurando pelo Bairro ID:", bairroID);
+            // -----------------
+
             const filename = mapaNomesArquivos[bairroID];
+            
+            // ----- DEBUG -----
+            console.log("Nome de arquivo encontrado no mapa:", filename);
+            // -----------------
+
             if (filename) {
-                // Caminho configurado para o repositório /territoriov3/
-                mapaImgElement.src = `/territoriov3/bairro_maps/${filename}`; 
+                const imagePath = `/territoriov3/bairro_maps/${filename}`;
+                
+                // ----- DEBUG -----
+                console.log("Caminho final que será carregado:", imagePath);
+                // -----------------
+
+                mapaImgElement.src = imagePath; 
             } else {
-                console.warn(`Nome de arquivo não encontrado no mapa para o ID: ${bairroID}`);
+                // ----- DEBUG -----
+                console.warn(`AVISO: Nome de arquivo NÃO encontrado no mapa para o ID: ${bairroID}`);
+                // -----------------
                 mapaImgElement.src = urlMapaGeral; 
             }
         }
@@ -377,18 +398,14 @@ A
         // (Função limparMarcações - Sem alterações)
         async function limparMarcacoes() {
             if (!bairroAtivoID || !bairroAtivoNome) return;
-
             if (!confirm(`Tem certeza que deseja limpar TODAS as marcações do bairro ${bairroAtivoNome}? Essa ação é irreversível no Firebase.`)) {
                 return;
             }
-
             const numQuadras = bairros[bairroAtivoNome];
             const updates = {};
-            
             for (let i = 1; i <= numQuadras; i++) {
                 updates[`quadra${i}/status`] = "Não feita";
             }
-
             try {
                 const bairroRef = ref(db, `territorios/${bairroAtivoID}`);
                 await update(bairroRef, updates);
@@ -405,9 +422,7 @@ A
         let saveObsTimeout;
         observacoesTextarea.addEventListener('input', () => {
             if (!bairroAtivoID) return;
-            
             clearTimeout(saveObsTimeout);
-            
             saveObsTimeout = setTimeout(() => {
                 const obsRef = ref(db, `territorios/${bairroAtivoID}/observacoes`);
                 set(obsRef, observacoesTextarea.value)
@@ -444,7 +459,7 @@ A
         }
 
 
-        // ------------------ FUNÇÃO PRINCIPAL DE CARREGAMENTO ------------------
+        // ------------------ FUNÇÃO PRINCIPAL DE CARREGAMENTO (COM DEBUGGING) ------------------
 
         function carregarPainel() {
             if (isContentLoaded) return;
@@ -456,6 +471,12 @@ A
             Object.keys(bairros).forEach((nomeBairro, index) => {
                 // GERA O BAIRROID (REMOVENDO ACENTOS E ESPAÇOS)
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g, '');
+
+                // ----- DEBUG -----
+                if (index === 0) {
+                    console.log(`DEBUG: Primeiro bairro ("${nomeBairro}") gerou o ID: ${bairroID}`);
+                }
+                // -----------------
 
                 const sidebarBtn = document.createElement("button");
                 sidebarBtn.textContent = nomeBairro;
@@ -477,48 +498,29 @@ A
                 for (let i = 1; i <= numQuadras; i++) {
                     const div = document.createElement("div");
                     div.classList.add("quadra");
-
                     const nome = document.createElement("span");
                     let nomeQuadra = `Quadra ${i}`;
-                    
                     if (nomeBairro === "Parque Alvorada A") {
-                        if (i === 20) {
-                            nomeQuadra = "CDHU";
-                        } else if (i === 21) {
-                            nomeQuadra = "CEU";
-                        }
+                        if (i === 20) nomeQuadra = "CDHU";
+                        else if (i === 21) nomeQuadra = "CEU";
                     }
                     nome.textContent = nomeQuadra;
-
                     const btn = document.createElement("button");
                     btn.textContent = "Não feita";
                     btn.classList.add("btn-nao");
-                    
                     div.appendChild(nome);
                     div.appendChild(btn);
                     tabContent.appendChild(div);
-                    
                     quadrasPorBairro[nomeBairro][i] = btn; 
-
                     btn.addEventListener("click", () => {
                         let novoStatus;
-                        
-                        if (btn.textContent === "Não feita") {
-                            novoStatus = "Em andamento";
-                        } else if (btn.textContent === "Em andamento") {
-                            novoStatus = "Concluída";
-                        } else {
-                            novoStatus = "Não feita";
-                        }
-                        
+                        if (btn.textContent === "Não feita") novoStatus = "Em andamento";
+                        else if (btn.textContent === "Em andamento") novoStatus = "Concluída";
+                        else novoStatus = "Não feita";
                         const quadraRef = ref(db, `territorios/${bairroID}/quadra${i}`);
-                        set(quadraRef, { status: novoStatus })
-                            .then(() => {
-                                mostrarFeedbackSalvo();
-                            });
+                        set(quadraRef, { status: novoStatus }).then(() => mostrarFeedbackSalvo());
                     });
                 }
-
                 if (index === 0) {
                     primeiroBairroID = bairroID;
                     primeiroBairroNome = nomeBairro;
@@ -533,21 +535,17 @@ A
             const geralRef = ref(db, "territorios");
             onValue(geralRef, (snapshot) => {
                 const dadosGerais = snapshot.val() || {};
-                
                 Object.keys(bairros).forEach(nomeBairro => {
                     const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g, '');
                     const dadosBairro = dadosGerais[bairroID] || {};
-                    
                     for (let i = 1; i <= bairros[nomeBairro]; i++) {
                         const status = dadosBairro[`quadra${i}`]?.status || "Não feita"; 
                         const btn = quadrasPorBairro[nomeBairro][i];
-                        
                         if (btn) {
                             if (status === "Não feita") {
                                 btn.textContent = "Não feita";
                                 btn.className = "btn-nao";
-                            } else if (status === "Em
-andamento") {
+                            } else if (status === "Em andamento") {
                                 btn.textContent = "Em andamento";
                                 btn.className = "btn-meio";
                             } else if (status === "Concluída") {
@@ -559,7 +557,6 @@ andamento") {
                 });
             });
         }
-
 
         // (Autenticação e Logout - Sem alterações)
         onAuthStateChanged(auth, (user) => {
@@ -578,3 +575,4 @@ andamento") {
 
 </body>
 </html>
+
