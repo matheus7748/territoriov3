@@ -291,6 +291,7 @@
         };
 
         // 🖼️ MAPA DE NOMES DE ARQUIVO (Aponte para os nomes "limpos")
+        // ERRO DE SINTAXE "A" REMOVIDO
         const mapaNomesArquivos = {
             "ComercialCentro": "comercialcentro.jpeg",
             "ComercialVilaSoJorge": "comercialvilasaojorge.jpeg",
@@ -310,7 +311,7 @@
             "SantaMnica": "santamonica.jpeg",
             "Sumar": "sumare.jpeg",
             "SouzaReis": "souzareis.jpeg",
-            "Itapu": "itapua.jpeg", // ERRO CORRIGIDO - O "A" FOI REMOVIDO
+            "Itapu": "itapua.jpeg",
             "Itapura": "itapura.jpeg",
             "PqdosReseds": "pqdosresedas.jpeg",
             "VistaBonitaA": "vistabonitaA.jpeg",
@@ -494,7 +495,7 @@
                             if (status === "Não feita") {
                                 btn.textContent = "Não feita";
                                 btn.className = "btn-nao";
-                            } else if (status === "Em andamento") {
+                            } else if (status === "Em andamento") { // ERRO "Em\nandamento" CORRIGIDO
                                 btn.textContent = "Em andamento";
                                 btn.className = "btn-meio";
                             } else if (status === "Concluída") {
