@@ -243,10 +243,6 @@
     <div id="salvarFeedback">Salvo! (Instantâneo)</div>
 
     <script type="module">
-        // ----- DEBUG -----
-        console.log("Script 'territorio.html' v.DEBUG (15:35) carregado.");
-        // -----------------
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
@@ -294,7 +290,7 @@
             "Vista Bonita D": 11
         };
 
-        // (Mapa de Nomes de Ficheiro - Sem alterações)
+        // 🖼️ MAPA DE NOMES DE ARQUIVO (Aponte para os nomes "limpos")
         const mapaNomesArquivos = {
             "ComercialCentro": "comercialcentro.jpeg",
             "ComercialVilaSoJorge": "comercialvilasaojorge.jpeg",
@@ -353,8 +349,6 @@
         });
 
         // ------------------ FUNÇÕES AUXILIARES ------------------
-
-        // (Função feedback - Sem alterações)
         let feedbackTimeout;
         function mostrarFeedbackSalvo() {
             clearTimeout(feedbackTimeout);
@@ -364,38 +358,17 @@
             }, 2000); 
         }
         
-        // 🖼️ FUNÇÃO DE ATUALIZAÇÃO DA IMAGEM (COM DEBUGGING)
+        // 🖼️ FUNÇÃO DE ATUALIZAÇÃO DA IMAGEM GERAL
         function atualizarImagemGeral(bairroID) {
-            
-            // ----- DEBUG -----
-            console.log("---------------------------------");
-            console.log("FUNÇÃO ATUALIZAR IMAGEM CHAMADA");
-            console.log("Procurando pelo Bairro ID:", bairroID);
-            // -----------------
-
             const filename = mapaNomesArquivos[bairroID];
-            
-            // ----- DEBUG -----
-            console.log("Nome de arquivo encontrado no mapa:", filename);
-            // -----------------
-
             if (filename) {
-                const imagePath = `/territoriov3/bairro_maps/${filename}`;
-                
-                // ----- DEBUG -----
-                console.log("Caminho final que será carregado:", imagePath);
-                // -----------------
-
-                mapaImgElement.src = imagePath; 
+                // CORRIGIDO: Aponta para /sitesal-ofinalv3/
+                mapaImgElement.src = `/sitesal-ofinalv3/bairro_maps/${filename}`; 
             } else {
-                // ----- DEBUG -----
-                console.warn(`AVISO: Nome de arquivo NÃO encontrado no mapa para o ID: ${bairroID}`);
-                // -----------------
                 mapaImgElement.src = urlMapaGeral; 
             }
         }
         
-        // (Função limparMarcações - Sem alterações)
         async function limparMarcacoes() {
             if (!bairroAtivoID || !bairroAtivoNome) return;
             if (!confirm(`Tem certeza que deseja limpar TODAS as marcações do bairro ${bairroAtivoNome}? Essa ação é irreversível no Firebase.`)) {
@@ -418,7 +391,6 @@
         }
         resetBtn.addEventListener('click', limparMarcacoes);
         
-        // (Função salvarObservacoes - Sem alterações)
         let saveObsTimeout;
         observacoesTextarea.addEventListener('input', () => {
             if (!bairroAtivoID) return;
@@ -430,23 +402,18 @@
             }, 1000); 
         });
 
-        // (Função setBairroAtivo - Sem alterações)
         function setBairroAtivo(bairroID, nomeBairro) {
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
-            
             bairroTitulo.textContent = nomeBairro;
             resetBtn.textContent = `Limpar Marcações (${nomeBairro})`;
             resetBtn.style.display = 'block';
             atualizarImagemGeral(bairroID); 
             observacoesContainer.style.display = 'block'; 
-
             document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
             document.getElementById(`content-${bairroID}`).classList.add("active");
-
             document.querySelectorAll("#sidebarBairrosList button").forEach(btn => btn.classList.remove("active"));
             document.querySelector(`#sidebarBairrosList button[data-bairro="${bairroID}"]`).classList.add("active");
-
             const obsRef = ref(db, `territorios/${bairroID}/observacoes`);
             onValue(obsRef, (snapshot) => {
                 const obs = snapshot.val() || "";
@@ -454,47 +421,32 @@
                     observacoesTextarea.value = obs;
                 }
             }, { onlyOnce: true });
-
             sidebarMenu.classList.remove("open");
         }
 
 
-        // ------------------ FUNÇÃO PRINCIPAL DE CARREGAMENTO (COM DEBUGGING) ------------------
-
+        // ------------------ FUNÇÃO PRINCIPAL DE CARREGAMENTO ------------------
         function carregarPainel() {
             if (isContentLoaded) return;
             isContentLoaded = true;
-
             let primeiroBairroID = null;
             let primeiroBairroNome = null;
             
             Object.keys(bairros).forEach((nomeBairro, index) => {
-                // GERA O BAIRROID (REMOVENDO ACENTOS E ESPAÇOS)
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g, '');
-
-                // ----- DEBUG -----
-                if (index === 0) {
-                    console.log(`DEBUG: Primeiro bairro ("${nomeBairro}") gerou o ID: ${bairroID}`);
-                }
-                // -----------------
-
                 const sidebarBtn = document.createElement("button");
                 sidebarBtn.textContent = nomeBairro;
                 sidebarBtn.dataset.bairro = bairroID;
                 sidebarBtn.dataset.nomeCompleto = nomeBairro;
                 sidebarBairrosList.appendChild(sidebarBtn);
-                
                 sidebarBtn.addEventListener("click", () => {
                     setBairroAtivo(bairroID, nomeBairro);
                 });
-
                 const tabContent = document.createElement("div");
                 tabContent.classList.add("tab-content");
                 tabContent.id = `content-${bairroID}`;
                 conteudoBairros.appendChild(tabContent);
-                
                 quadrasPorBairro[nomeBairro] = {}; 
-
                 for (let i = 1; i <= numQuadras; i++) {
                     const div = document.createElement("div");
                     div.classList.add("quadra");
@@ -526,12 +478,9 @@
                     primeiroBairroNome = nomeBairro;
                 }
             });
-            
             if (primeiroBairroID) {
                 setBairroAtivo(primeiroBairroID, primeiroBairroNome);
             }
-
-            // (Listener do Firebase - Sem alterações)
             const geralRef = ref(db, "territorios");
             onValue(geralRef, (snapshot) => {
                 const dadosGerais = snapshot.val() || {};
@@ -558,15 +507,17 @@
             });
         }
 
-        // (Autenticação e Logout - Sem alterações)
+        // 🔒 VERIFICAÇÃO DE AUTENTICAÇÃO
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 carregarPainel();
             } else {
-                window.location.href = "/territoriov3/index.html"; 
+                // CORRIGIDO: Aponta para /sitesal-ofinalv3/
+                window.location.href = "/sitesal-ofinalv3/index.html"; 
             }
         });
 
+        // 🚪 Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
           await signOut(auth);
         });
@@ -575,4 +526,8 @@
 
 </body>
 </html>
+
+</body>
+</html>
+
 
