@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mapa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Acesso ao Mapa de Território</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Senha" required>
+        <button id="loginButton">Entrar</button>
+        <p id="error-message"></p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+        // SUAS CONFIGURAÇÕES FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjSNz59SgzJwzqndzOJO4GRqHZ3-6abGM",
+            authDomain: "login-territorios.firebaseapp.com",
+            projectId: "login-territorios",
+            storageBucket: "login-territorios.firebasestorage.app",
+            messagingSenderId: "495689013315",
+            appId: "1:495689013315:web:c8b22bbf1fe9ad99779cf6",
+            measurementId: "G-P4YG93BTN6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('loginButton');
+        const errorMessage = document.getElementById('error-message');
+        
+        // CORRIGIDO: URL do novo repositório e nome de arquivo sem acento
+        const TERRITORIO_URL = "/sitesal-ofinalv3/territorio.html"; 
+
+        // 1. Verifica se o usuário já está logado
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Se estiver logado, redireciona imediatamente
+                window.location.href = TERRITORIO_URL;
+            }
+        });
+
+        // 2. Tenta fazer login
+        loginButton.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            errorMessage.textContent = ''; // Limpa mensagens de erro anteriores
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // Login bem-sucedido, redireciona
+                window.location.href = TERRITORIO_URL;
+
+            } catch (error) {
+                let message = "Erro de login. Verifique o email e a senha.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    message = "Email ou senha incorretos.";
+                }
+                errorMessage.textContent = message;
+            }
+        });
+    </script>
+</body>
+</html>
