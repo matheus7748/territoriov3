@@ -5,210 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa do Território</title>
     <style>
-        /* Seu CSS intacto */
-        * {
-            transition: all 0.3s ease;
-            box-sizing: border-box; 
-        }
+        * { transition: all 0.3s ease; box-sizing: border-box; }
         input:focus, button:focus, .tab-btn:focus, #menuToggle:focus, #closeMenuBtn:focus, #observacoesTextarea:focus {
-            outline: 2px solid #4a90e2; 
-            outline-offset: 2px;
+            outline: 2px solid #4a90e2; outline-offset: 2px;
         }
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
-            gap: 20px;
-            padding: 20px;
-            flex-direction: row;
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f0f0f0;
+            display: flex; justify-content: center; align-items: flex-start; height: 100vh;
+            gap: 20px; padding: 20px; flex-direction: row;
         }
-        #menuToggle {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 1100;
-            background: #4a90e2;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        #menuToggle { position: fixed; top: 15px; left: 15px; z-index: 1100; background: #4a90e2;
+            color: white; border: none; padding: 10px 15px; font-size: 24px; font-weight: bold;
+            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;
+        }
+        #sidebarMenu { position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
+            background: #f8f8f8; box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000;
+            padding: 20px; padding-top: 50px; overflow-y: auto; transition: left 0.3s ease;
+        }
+        #sidebarMenu.open { left: 0; }
+        #sidebarMenu h3 { margin-top: 0; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; }
+        #closeMenuBtn { background: #d9534f; color: white; border: none; padding: 5px 10px;
+            border-radius: 5px; position: absolute; top: 10px; right: 10px; font-weight: bold; cursor: pointer;
+        }
+        #sidebarBairrosList button { display: block; width: 100%; text-align: left; background: none; border: none;
+            padding: 12px 10px; margin: 5px 0; font-size: 16px; color: #333; border-radius: 5px; outline: none;
             cursor: pointer;
         }
-        #sidebarMenu {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100%;
-            background: #f8f8f8;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
-            z-index: 2000;
-            padding: 20px;
-            padding-top: 50px;
-            overflow-y: auto;
-            transition: left 0.3s ease;
+        #sidebarBairrosList button.active { background: #4a90e2; color: white; font-weight: bold; }
+        #sidebarBairrosList button:hover:not(.active) { background: #e0e0e0; }
+        .mapa { flex: 2; min-width: 400px; display: flex; justify-content: center; align-items: center;
+            background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            padding: 10px; position: relative; margin-left: 50px;
         }
-        #sidebarMenu.open {
-            left: 0;
-        }
-        #sidebarMenu h3 {
-            margin-top: 0;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
-        #closeMenuBtn {
-            background: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        #sidebarBairrosList button {
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            padding: 12px 10px;
-            margin: 5px 0;
-            font-size: 16px;
-            color: #333;
-            border-radius: 5px;
-            outline: none;
-            cursor: pointer;
-        }
-        #sidebarBairrosList button.active {
-            background: #4a90e2;
-            color: white;
-            font-weight: bold;
-        }
-        #sidebarBairrosList button:hover:not(.active) {
-            background: #e0e0e0;
-        }
-        .mapa {
-            flex: 2;
-            min-width: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            padding: 10px;
-            position: relative;
-            margin-left: 50px;
-        }
-        .mapa img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-        .painel {
-            flex: 1;
-            min-width: 350px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            overflow-y: auto;
-            max-height: 96vh;
+        .mapa img { max-width: 100%; height: auto; border-radius: 10px; }
+        .painel { flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2); overflow-y: auto; max-height: 96vh;
         }
         .painel h2 { text-align: center; margin-bottom: 20px; }
-        #observacoesContainer {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
+        #observacoesContainer { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
+            border-radius: 8px; background-color: #f9f9f9; display: none;
         }
-        #observacoesTextarea {
-            width: 100%;
-            min-height: 100px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
-            font-size: 14px;
+        #observacoesTextarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc;
+            border-radius: 4px; resize: vertical; font-size: 14px;
         }
-        .quadra { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px; border-radius: 8px; background-color: #eee; }
-        .quadra span { font-weight: bold; }
-        .quadra button { border: none; padding: 6px 10px; border-radius: 6px; color: white; font-weight: bold; min-width: 120px; cursor: pointer; }
-        .quadra button:hover { filter: brightness(110%); transform: scale(1.02); }
-        .btn-nao { background-color: red; }
-        .btn-meio { background-color: orange; }
-        .btn-sim { background-color: green; }
-        .logout, .reset-btn {
-            display: block; 
-            width: 100%; 
-            color: white; 
-            border: none; 
-            padding: 10px; 
-            border-radius: 8px; 
-            margin-top: 10px; 
-            font-weight: bold;
-            cursor: pointer;
+        .quadra { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 8px;
+            border-radius: 8px; background-color: #eee; }
+        .quadra span { font-weight: bold; margin-right: 10px; }
+        .logout, .reset-btn { display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
+            margin-top: 10px; font-weight: bold; cursor: pointer;
         }
-        .logout { background-color: #444; }
-        .logout:hover { background-color: #222; }
-        .reset-btn { background-color: #d9534f; }
-        .reset-btn:hover { background-color: #c9302c; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        #salvarFeedback {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: green;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-            z-index: 1000;
+        .logout { background-color: #444; } .logout:hover { background-color: #222; }
+        .reset-btn { background-color: #d9534f; } .reset-btn:hover { background-color: #c9302c; }
+        .tab-content { display: none; } .tab-content.active { display: block; }
+        #salvarFeedback { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: green; color: white; padding: 10px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s; z-index: 1000;
         }
-        #salvarFeedback.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        #salvarFeedback.show { opacity: 1; visibility: visible; }
         @media (max-width: 768px) {
-            body {
-                flex-direction: column; 
-                height: auto; 
-                padding: 10px;
-            }
-            .mapa {
-                min-width: 100%; 
-                margin-bottom: 15px;
-                margin-left: 0;
-                padding-top: 50px;
-            }
-            .mapa img {
-                 max-height: 40vh; 
-                 object-fit: contain;
-            }
-            #menuToggle {
-                top: 10px;
-                left: 10px;
-            }
-            .painel {
-                max-height: 80vh;
-            }
+            body { flex-direction: column; height: auto; padding: 10px; }
+            .mapa { min-width: 100%; margin-bottom: 15px; margin-left: 0; padding-top: 50px; }
+            .mapa img { max-height: 40vh; object-fit: contain; }
+            #menuToggle { top: 10px; left: 10px; }
+            .painel { max-height: 80vh; }
         }
     </style>
 </head>
@@ -229,14 +88,14 @@
     <div class="painel">
         <h2 id="bairroTitulo">Selecione um Bairro</h2>
         
-        <div id="observacoesContainer" style="display: none;">
+        <div id="observacoesContainer">
             <h4>Observações do Bairro</h4>
             <textarea id="observacoesTextarea" placeholder="Digite aqui anotações importantes sobre o bairro..."></textarea>
         </div>
         
         <div id="conteudoBairros"></div>
         
-        <button class="reset-btn" id="resetBtn" style="display: none;">Limpar Marcações</button>
+        <button class="reset-btn" id="resetBtn">Limpar Marcações</button>
         <button class="logout" id="logoutBtn">Sair</button>
     </div>
     
@@ -261,30 +120,12 @@
         const auth = getAuth(app);    
 
         const bairros = {
-            "Comercial (Centro)": 15,
-            "Comercial (Vila São Jorge)": 19,
-            "Vila Brasil": 21, 
-            "Vila Iti": 13,
-            "Cinquentenário A": 4,
-            "Cinquentenário B": 6,
-            "Vila Mendes": 8,
-            "Vila Luso A": 11,
-            "Vila Luso B": 10,
-            "Vila Rainho": 11,
-            "São Domingos": 13,
-            "Jardim Planaltina": 19,
-            "São Bento": 8,
-            "Parque Alvorada A": 21,
-            "Parque Alvorada B": 15,
-            "Santa Mônica": 19,
-            "Sumaré": 17,
-            "Souza Reis": 18,
-            "Itapuã": 11,
-            "Itapura": 4,
-            "Pq. dos Resedás": 1,
-            "Vista Bonita A": 14,
-            "Vista Bonita B": 5,
-            "Vista Bonita C": 11,
+            "Comercial (Centro)": 15, "Comercial (Vila São Jorge)": 19, "Vila Brasil": 21,
+            "Vila Iti": 13, "Cinquentenário A": 4, "Cinquentenário B": 6, "Vila Mendes": 8,
+            "Vila Luso A": 11, "Vila Luso B": 10, "Vila Rainho": 11, "São Domingos": 13,
+            "Jardim Planaltina": 19, "São Bento": 8, "Parque Alvorada A": 21, "Parque Alvorada B": 15,
+            "Santa Mônica": 19, "Sumaré": 17, "Souza Reis": 18, "Itapuã": 11, "Itapura": 4,
+            "Pq. dos Resedás": 1, "Vista Bonita A": 14, "Vista Bonita B": 5, "Vista Bonita C": 11,
             "Vista Bonita D": 11
         };
 
@@ -316,8 +157,7 @@
             "VistaBonitaD": "vistabonitaD.jpeg"
         };
 
-        let quadrasPorBairro = {}; 
-        
+        let quadrasPorBairro = {};
         const mapaImgElement = document.getElementById("mapaImg");
         const salvarFeedback = document.getElementById("salvarFeedback");
         const resetBtn = document.getElementById("resetBtn");
@@ -329,123 +169,154 @@
         const conteudoBairros = document.getElementById("conteudoBairros");
         const observacoesContainer = document.getElementById("observacoesContainer");
         const observacoesTextarea = document.getElementById("observacoesTextarea");
-        
+
         const urlMapaGeral = mapaImgElement.src; 
         let bairroAtivoID = null;
         let bairroAtivoNome = null;
         let isContentLoaded = false; 
 
-        menuToggle.addEventListener("click", () => sidebarMenu.classList.add("open"));
-        closeMenuBtn.addEventListener("click", () => sidebarMenu.classList.remove("open"));
+        menuToggle.addEventListener("click", ()=>sidebarMenu.classList.add("open"));
+        closeMenuBtn.addEventListener("click", ()=>sidebarMenu.classList.remove("open"));
 
         let feedbackTimeout;
-        function mostrarFeedbackSalvo() {
+        function mostrarFeedbackSalvo(){
             clearTimeout(feedbackTimeout);
             salvarFeedback.classList.add("show");
-            feedbackTimeout = setTimeout(() => salvarFeedback.classList.remove("show"), 2000);
+            feedbackTimeout=setTimeout(()=>salvarFeedback.classList.remove("show"),2000);
         }
 
-        function atualizarImagemGeral(bairroID) {
+        function atualizarImagemGeral(bairroID){
             const filename = mapaNomesArquivos[bairroID];
             mapaImgElement.src = filename ? `/territoriov3/bairro_maps/${filename}` : urlMapaGeral;
         }
 
-        async function limparMarcacoes() {
-            if (!bairroAtivoID || !bairroAtivoNome) return;
-            if (!confirm(`Tem certeza que deseja limpar TODAS as marcações do bairro ${bairroAtivoNome}?`)) return;
+        async function limparMarcacoes(){
+            if(!bairroAtivoID || !bairroAtivoNome) return;
+            if(!confirm(`Tem certeza que deseja limpar TODAS as marcações do bairro ${bairroAtivoNome}?`)) return;
             const numQuadras = bairros[bairroAtivoNome];
             const updates = {};
-            for (let i = 1; i <= numQuadras; i++) updates[`quadra${i}/status`] = "Não feita";
-            try { await update(ref(db, `territorios/${bairroAtivoID}`), updates); mostrarFeedbackSalvo(); alert(`Marcações do bairro ${bairroAtivoNome} limpas!`); }
-            catch(e){ console.error(e); alert("Erro ao limpar."); }
+            for(let i=1;i<=numQuadras;i++) updates[`quadra${i}/status`] = "Não feita";
+            try{
+                await update(ref(db, `territorios/${bairroAtivoID}`), updates);
+                mostrarFeedbackSalvo();
+                alert(`Marcações do bairro ${bairroAtivoNome} limpas com sucesso!`);
+            }catch(e){console.error(e); alert("Erro ao limpar marcações.");}
         }
-        resetBtn.addEventListener('click', limparMarcacoes);
+        resetBtn.addEventListener("click", limparMarcacoes);
 
         let saveObsTimeout;
-        observacoesTextarea.addEventListener('input', () => {
-            if (!bairroAtivoID) return;
+        observacoesTextarea.addEventListener('input', ()=>{
+            if(!bairroAtivoID) return;
             clearTimeout(saveObsTimeout);
-            saveObsTimeout = setTimeout(() => set(ref(db, `territorios/${bairroAtivoID}/observacoes`), observacoesTextarea.value).then(mostrarFeedbackSalvo), 1000);
+            saveObsTimeout = setTimeout(()=>{
+                set(ref(db, `territorios/${bairroAtivoID}/observacoes`), observacoesTextarea.value).then(mostrarFeedbackSalvo);
+            },1000);
         });
 
-        function setBairroAtivo(bairroID, nomeBairro) {
+        function setBairroAtivo(bairroID,nomeBairro){
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
             bairroTitulo.textContent = nomeBairro;
             resetBtn.textContent = `Limpar Marcações (${nomeBairro})`;
-            resetBtn.style.display = 'block';
-            atualizarImagemGeral(bairroID); 
-            observacoesContainer.style.display = 'block'; 
+            resetBtn.style.display='block';
+            atualizarImagemGeral(bairroID);
+            observacoesContainer.style.display='block';
             document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
             document.getElementById(`content-${bairroID}`).classList.add("active");
-            document.querySelectorAll("#sidebarBairrosList button").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll("#sidebarBairrosList button").forEach(b=>b.classList.remove("active"));
             document.querySelector(`#sidebarBairrosList button[data-bairro="${bairroID}"]`).classList.add("active");
-            onValue(ref(db, `territorios/${bairroID}/observacoes`), snapshot => {
-                if (bairroID === bairroAtivoID) observacoesTextarea.value = snapshot.val() || "";
-            }, { onlyOnce: true });
+
+            onValue(ref(db, `territorios/${bairroID}/observacoes`), snap=>{
+                if(bairroID===bairroAtivoID) observacoesTextarea.value = snap.val()||"";
+            }, {onlyOnce:true});
             sidebarMenu.classList.remove("open");
         }
 
-        function carregarPainel() {
-            if (isContentLoaded) return;
-            isContentLoaded = true;
-            let primeiroBairroID = null, primeiroBairroNome = null;
+        function carregarPainel(){
+            if(isContentLoaded) return;
+            isContentLoaded=true;
+
+            let primeiroBairroID=null, primeiroBairroNome=null;
+
             Object.keys(bairros).forEach((nomeBairro,index)=>{
                 const bairroID = nomeBairro.replace(/[^a-zA-Z0-9]/g,'');
-                const numQuadras = bairros[nomeBairro]; // CORRIGIDO
+                
+                // Botão Sidebar
                 const sidebarBtn = document.createElement("button");
                 sidebarBtn.textContent = nomeBairro;
                 sidebarBtn.dataset.bairro = bairroID;
-                sidebarBtn.dataset.nomeCompleto = nomeBairro;
                 sidebarBairrosList.appendChild(sidebarBtn);
-                sidebarBtn.addEventListener("click",()=>setBairroAtivo(bairroID,nomeBairro));
+                sidebarBtn.addEventListener("click", ()=>setBairroAtivo(bairroID,nomeBairro));
+
+                // Tab Content
                 const tabContent = document.createElement("div");
                 tabContent.classList.add("tab-content");
                 tabContent.id = `content-${bairroID}`;
                 conteudoBairros.appendChild(tabContent);
-                quadrasPorBairro[nomeBairro] = {};
+
+                quadrasPorBairro[nomeBairro]={};
+                const numQuadras = bairros[nomeBairro];
+                
                 for(let i=1;i<=numQuadras;i++){
-                    const div=document.createElement("div");
+                    const div = document.createElement("div");
                     div.classList.add("quadra");
-                    const nome=document.createElement("span");
-                    let nomeQuadra=`Quadra ${i}`;
-                    if(nomeBairro==="Parque Alvorada A"){if(i===20)nomeQuadra="CDHU"; if(i===21)nomeQuadra="Quadra A2";} 
-                    nome.textContent=nomeQuadra;
-                    const btnNao=document.createElement("button");
-                    btnNao.classList.add("btn-nao");
-                    btnNao.textContent="Não Feita";
-                    const btnMeio=document.createElement("button");
-                    btnMeio.classList.add("btn-meio");
-                    btnMeio.textContent="Meio Feita";
-                    const btnSim=document.createElement("button");
-                    btnSim.classList.add("btn-sim");
-                    btnSim.textContent="Feita";
-                    div.append(nome,btnNao,btnMeio,btnSim);
+
+                    const nome = document.createElement("span");
+                    let nomeQuadra = `Quadra ${i}`;
+                    if(nomeBairro==="Parque Alvorada A"){
+                        if(i===20) nomeQuadra="CDHU";
+                        else if(i===21) nomeQuadra="CEU";
+                    }
+                    nome.textContent = nomeQuadra;
+
+                    const statusBtn = document.createElement("button");
+                    statusBtn.style.flex="1"; statusBtn.style.height="40px"; statusBtn.style.border="none"; statusBtn.style.borderRadius="8px";
+                    statusBtn.style.fontWeight="bold"; statusBtn.style.color="white"; statusBtn.style.cursor="pointer";
+
+                    const estados=["Não feita","Em andamento","Finalizada"];
+                    const cores={ "Não feita":"red","Em andamento":"orange","Finalizada":"green" };
+                    let statusAtual="Não feita";
+                    function atualizarBotao(status){
+                        statusBtn.textContent=status;
+                        statusBtn.style.backgroundColor=cores[status];
+                    }
+                    atualizarBotao(statusAtual);
+
+                    statusBtn.addEventListener("click", ()=>{
+                        const idx=estados.indexOf(statusAtual);
+                        statusAtual=estados[(idx+1)%estados.length];
+                        atualizarBotao(statusAtual);
+                        update(ref(db, `territorios/${bairroID}/quadra${i}`), {status:statusAtual}).then(mostrarFeedbackSalvo);
+                    });
+
+                    const quadraRef = ref(db, `territorios/${bairroID}/quadra${i}`);
+                    onValue(quadraRef, snap=>{
+                        const val = snap.val()?.status || "Não feita";
+                        statusAtual=val;
+                        atualizarBotao(statusAtual);
+                        quadrasPorBairro[nomeBairro][i] = statusBtn;
+                    });
+
+                    div.append(nome,statusBtn);
                     tabContent.appendChild(div);
-                    const quadraRef=ref(db, `territorios/${bairroID}/quadra${i}`);
-                    [btnNao,btnMeio,btnSim].forEach((btn,status)=>{
-                        btn.addEventListener("click",()=>update(quadraRef,{status:btn.textContent}).then(mostrarFeedbackSalvo));
-                    });
-                    onValue(quadraRef,snap=>{
-                        const val=snap.val()?.status || "Não feita";
-                        btnNao.classList.toggle("active",val==="Não feita");
-                        btnMeio.classList.toggle("active",val==="Meio Feita");
-                        btnSim.classList.toggle("active",val==="Feita");
-                        quadrasPorBairro[nomeBairro][i]=val;
-                    });
                 }
-                if(index===0){primeiroBairroID=bairroID; primeiroBairroNome=nomeBairro;}
+
+                if(index===0){ primeiroBairroID=bairroID; primeiroBairroNome=nomeBairro; }
             });
+
             if(primeiroBairroID) setBairroAtivo(primeiroBairroID,primeiroBairroNome);
         }
 
-        onAuthStateChanged(auth, user => {
+        onAuthStateChanged(auth,user=>{
             if(user) carregarPainel();
             else window.location.href="login.html";
         });
-        document.getElementById("logoutBtn").addEventListener("click",()=>signOut(auth).then(()=>window.location.href="login.html").catch(console.error));
-    </script>
 
+        document.getElementById("logoutBtn").addEventListener("click",()=>{
+            signOut(auth).then(()=>window.location.href="login.html");
+        });
+
+    </script>
 </body>
 </html>
 
