@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Mapa</title>
     <style>
-        /* (CSS - Sem alterações) */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -15,20 +14,22 @@
             min-height: 100vh;
             margin: 0;
         }
-        .login-container {
+        .container {
             background-color: white;
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 320px;
             text-align: center;
+            overflow: hidden;
         }
         h2 {
             margin-bottom: 25px;
             color: #333;
         }
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="text"] { /* Novo campo Nome */
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -53,24 +54,58 @@
             color: red;
             margin-top: 15px;
             font-weight: bold;
+            font-size: 14px;
+        }
+        /* Links para alternar */
+        .toggle-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #4a90e2;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        /* Esconde o formulário de cadastro por padrão */
+        #registerForm {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <h2>Acesso ao Mapa de Território</h2>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Senha" required>
-        <button id="loginButton">Entrar</button>
-        <p id="error-message"></p>
+    <div class="container">
+        
+        <div id="loginForm">
+            <h2>Acesso ao Mapa</h2>
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Senha" required>
+            <button id="loginButton">Entrar</button>
+            <p id="loginError" class="error-message"></p>
+            <p class="toggle-link" id="showRegister">Não tem conta? Cadastre-se</p>
+        </div>
+
+        <div id="registerForm">
+            <h2>Cadastro</h2>
+            <input type="text" id="registerName" placeholder="Nome" required>
+            <input type="email" id="registerEmail" placeholder="Email" required>
+            <input type="password" id="registerPassword" placeholder="Senha" required>
+            <button id="registerButton">Cadastrar</button>
+            <p id="registerError" class="error-message"></p>
+            <p class="toggle-link" id="showLogin">Já tem conta? Entrar</p>
+        </div>
+
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+        // Importa as novas funções
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-        // (Configurações Firebase - Sem alterações)
         const firebaseConfig = {
             apiKey: "AIzaSyCjSNz59SgzJwzqndzOJO4GRqHZ3-6abGM",
             authDomain: "login-territorios.firebaseapp.com",
@@ -83,13 +118,36 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginButton = document.getElementById('loginButton');
-        const errorMessage = document.getElementById('error-message');
-        
-        // CORRIGIDO: Aponta para /territoriov3/
         const TERRITORIO_URL = "/territoriov3/territorio.html"; 
+
+        // Elementos do Login
+        const loginForm = document.getElementById('loginForm');
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const loginButton = document.getElementById('loginButton');
+        const loginError = document.getElementById('loginError');
+
+        // Elementos do Cadastro
+        const registerForm = document.getElementById('registerForm');
+        const registerNameInput = document.getElementById('registerName');
+        const registerEmailInput = document.getElementById('registerEmail');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const registerButton = document.getElementById('registerButton');
+        const registerError = document.getElementById('registerError');
+
+        // Elementos de Toggle
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+
+        // Lógica para alternar os painéis
+        showRegister.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+        showLogin.addEventListener('click', () => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
 
         // 1. Verifica se o usuário já está logado
         onAuthStateChanged(auth, (user) => {
@@ -100,24 +158,50 @@
 
         // 2. Tenta fazer login
         loginButton.addEventListener('click', async () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            errorMessage.textContent = '';
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            loginError.textContent = '';
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = TERRITORIO_URL;
+                // O onAuthStateChanged vai tratar do redirecionamento
             } catch (error) {
-                let message = "Erro de login. Verifique o email e a senha.";
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    message = "Email ou senha incorretos.";
-                }
-                errorMessage.textContent = message;
+                loginError.textContent = "Email ou senha incorretos.";
             }
         });
-    </script>
-</body>
-</html>
-    </script>
-</body>
-</html>
 
+        // 3. Tenta fazer o Cadastro (Novo)
+        registerButton.addEventListener('click', async () => {
+            const nome = registerNameInput.value;
+            const email = registerEmailInput.value;
+            const password = registerPasswordInput.value;
+            registerError.textContent = '';
+
+            if (nome === "") {
+                registerError.textContent = "Por favor, insira seu nome.";
+                return;
+            }
+
+            try {
+                // Cria o usuário
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // **Salva o nome no perfil do usuário**
+                await updateProfile(auth.currentUser, {
+                    displayName: nome
+                });
+
+                // O onAuthStateChanged vai tratar do redirecionamento
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    registerError.textContent = "Este email já está em uso.";
+                } else if (error.code === 'auth/weak-password') {
+                    registerError.textContent = "A senha deve ter pelo menos 6 caracteres.";
+                } else {
+                    registerError.textContent = "Erro ao cadastrar. Tente novamente.";
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
