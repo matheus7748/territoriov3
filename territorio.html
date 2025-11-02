@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa do Território</title>
     <style>
-        /* === TEMA ESCURO (DARK MODE) === */
+        /* === TEMA ESCURO (DARK MODE) REFINADO === */
         * { 
             box-sizing: border-box; 
         }
@@ -13,8 +13,8 @@
         body { 
             margin: 0; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #1a1a1a; /* Fundo escuro */
-            color: #f0f0f0; /* Texto claro */
+            background-color: #1a1a1a;
+            color: #f0f0f0; 
             display: flex; 
             justify-content: center; 
             align-items: flex-start; 
@@ -24,14 +24,13 @@
             flex-direction: row;
         }
 
-        /* Foco visível para acessibilidade */
         input:focus, button:focus, .tab-btn:focus, #menuToggle:focus, #closeMenuBtn:focus, #observacoesTextarea:focus {
-            outline: 2px solid #007bff;
+            outline: 2px solid #0d6efd; /* Azul mais vivo */
             outline-offset: 2px;
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.3);
         }
 
-        /* === BOTÕES: Base (Todos os botões) === */
+        /* === BOTÕES: Base === */
         button {
             border-radius: 6px;
             font-size: 14px;
@@ -39,15 +38,17 @@
             cursor: pointer;
             padding: 10px 15px;
             border: 1px solid transparent;
-            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            /* Efeito de transição base */
+            transition: all 0.2s ease-out;
         }
+        /* Efeito "pop" mais forte */
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
         button:active {
-            transform: translateY(0);
-            box-shadow: none;
+            transform: translateY(0) scale(1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         /* === MENU LATERAL (Sidebar) === */
@@ -56,14 +57,13 @@
             top: 15px;
             left: 15px;
             z-index: 1100;
-            background: #007bff; /* Azul primário */
+            background: #0d6efd; /* Azul mais vivo */
             color: white;
             border: none;
             padding: 10px 15px;
             font-size: 24px;
-            font-weight: bold;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         #sidebarMenu {
             position: fixed;
@@ -71,7 +71,7 @@
             left: -300px;
             width: 280px;
             height: 100%;
-            background: #2a2a2a; /* Fundo do menu escuro */
+            background: #2a2a2a; 
             color: #f0f0f0;
             box-shadow: 5px 0 15px rgba(0,0,0,0.2);
             z-index: 2000;
@@ -83,9 +83,9 @@
         #sidebarMenu.open { left: 0; }
         #sidebarMenu h3 { 
             margin-top: 0; 
-            border-bottom: 2px solid #3a3a3a; /* Borda escura */
+            border-bottom: 2px solid #3a3a3a;
             padding-bottom: 10px; 
-            margin-bottom: 10px;
+            margin-bottom: 10px; 
             color: #ffffff;
         }
         #closeMenuBtn {
@@ -102,31 +102,31 @@
             text-align: left;
             background: none;
             border: none;
-            padding: 12px 15px;
-            margin: 5px 0;
-            font-size: 16px;
-            color: #f0f0f0; /* Texto claro */
+            padding: 10px 15px; /* Fonte menor, padding menor */
+            margin: 4px 0;
+            font-size: 15px; /* Fonte ligeiramente menor */
+            color: #f0f0f0;
             border-radius: 6px;
             font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            transition: all 0.2s ease;
         }
         #sidebarBairrosList button.active {
-            background: #007bff;
+            background: #0d6efd;
             color: white;
             font-weight: 600;
         }
         #sidebarBairrosList button:hover:not(.active) {
-            background: #3a3a3a; /* Fundo mais claro no hover */
+            background: #3a3a3a;
             color: #ffffff;
-            transform: none;
+            transform: translateX(4px); /* Efeito de deslizar */
             box-shadow: none;
         }
         
         /* === PAINÉIS PRINCIPAIS (Mapa e Painel Lateral) === */
         .mapa { 
             flex: 2; min-width: 400px; display: flex; justify-content: center; align-items: center;
-            background: #242424; /* Painel escuro */
-            border: 1px solid #3a3a3a; /* Borda sutil */
+            background: #242424; 
+            border: 1px solid #3a3a3a;
             border-radius: 10px;
             padding: 10px; position: relative; margin-left: 50px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -136,22 +136,21 @@
         }
         .painel { 
             flex: 1; min-width: 350px; 
-            background: #242424; /* Painel escuro */
+            background: #242424;
             border: 1px solid #3a3a3a;
             padding: 20px; border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             overflow-y: auto; max-height: 96vh;
         }
         #welcomeMessage { 
-            text-align: center; font-size: 16px; color: #adb5bd; /* Cinza claro */
+            text-align: center; font-size: 16px; color: #adb5bd;
             margin-top: -10px; margin-bottom: 15px; font-weight: 500;
         }
         .painel h2 { text-align: center; margin-bottom: 20px; color: #ffffff; }
         
-        /* Caixas de Observação e Data */
         #datasContainer, #observacoesContainer {
             margin-bottom: 20px; padding: 15px; border: 1px solid #3a3a3a;
-            border-radius: 8px; background-color: #1e1e1e; /* Mais escuro */
+            border-radius: 8px; background-color: #1e1e1e;
             display: none;
         }
         #datasContainer label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #f0f0f0;}
@@ -161,58 +160,64 @@
         .quadra-observacao-input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #495057; /* Borda cinza */
+            border: 1px solid #495057;
             border-radius: 6px;
             font-size: 14px;
-            background-color: #3a3a3a; /* Fundo do input */
-            color: #f0f0f0; /* Texto do input */
+            background-color: #3a3a3a;
+            color: #f0f0f0;
         }
-        /* Cor do texto do placeholder */
-        ::placeholder {
-            color: #adb5bd;
-            opacity: 1; 
-        }
-        
+        ::placeholder { color: #adb5bd; opacity: 1; }
         .data-saved-by { font-size: 11px; color: #adb5bd; margin-bottom: 10px; height: 12px; }
         #observacoesTextarea { min-height: 100px; resize: vertical; }
 
-        /* === QUADRAS (Novo estilo "Card") === */
+        /* === QUADRAS (EFEITO ESPECIAL) === */
         .quadra-container { 
-            background-color: #2a2a2a; /* Cor do "card" da quadra */
+            background-color: #2a2a2a;
             border: 1px solid #3a3a3a;
             border-radius: 8px;
             margin-bottom: 12px; 
             padding: 12px 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+            /* Efeito de transição */
+            transition: all 0.2s ease-out;
+            position: relative; /* Necessário para o z-index no hover */
         }
         .quadra-container:hover {
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-            border-color: #555;
+            /* Efeito "Glow" e "Lift" */
+            transform: scale(1.02);
+            border-color: #0d6efd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 0 8px rgba(13,110,253,0.3);
+            z-index: 10;
         }
         .quadra-main { display: flex; justify-content: space-between; align-items: center; }
         .quadra-nome-container { display: flex; align-items: center; }
-        .quadra-nome { font-weight: 600; font-size: 15px; margin-right: 5px; color: #ffffff; }
+        .quadra-nome { font-weight: 600; font-size: 14px; margin-right: 5px; color: #ffffff; }
         .toggle-anotacao-btn { 
             background: none; border: none; cursor: pointer;
             font-size: 16px; padding: 0 5px;
             transition: transform 0.2s ease;
         }
         .toggle-anotacao-btn:hover {
-            transform: scale(1.2) rotate(10deg);
+            transform: scale(1.2) rotate(15deg);
+            filter: brightness(1.5);
             box-shadow: none;
         }
         
-        /* Botões de Status */
         .status-btn { 
             flex: 1; max-width: 120px;
             height: 38px;
             border: none;
+            font-size: 13px; /* Fonte menor */
             font-weight: 600; 
             color: white; 
             cursor: pointer;
             text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            transition: all 0.2s ease; /* Transição para o hover */
         }
+        .status-btn:hover {
+            filter: brightness(1.15); /* Clareia o botão */
+            transform: translateY(-2px) scale(1.05);
+        }
+        /* Cores dos status (não mudam) */
         .btn-nao { background-color: #dc3545; }
         .btn-meio { background-color: #fd7e14; }
         .btn-sim { background-color: #28a745; }
@@ -221,17 +226,18 @@
             display: none; 
             margin-top: 12px;
             padding-top: 12px; 
-            border-top: 1px solid #3a3a3a; /* Borda escura */
+            border-top: 1px solid #3a3a3a;
+        }
+        .dirigente-input, .quadra-observacao-input {
+            font-size: 13px; /* Fonte menor */
         }
         .quadra-label {
-             font-size: 13px; 
+             font-size: 12px; /* Fonte menor */
              font-weight: 600; 
              display: block;
-             color: #adb5bd; /* Cinza claro */
+             color: #adb5bd;
         }
-        .quadra-label.obs-label {
-            margin-top: 10px;
-        }
+        .quadra-label.obs-label { margin-top: 10px; }
         
         /* === BOTÕES DO PAINEL (Cores) === */
         .logout, .reset-btn, #verHistoricoBtn, #relatorioBtn {
@@ -243,8 +249,8 @@
         .reset-btn:hover { background-color: #c82333; }
         #verHistoricoBtn { background-color: #6c757d; display: none; }
         #verHistoricoBtn:hover { background-color: #5a6268; }
-        #relatorioBtn { background-color: #007bff; display: none; }
-        #relatorioBtn:hover { background-color: #0069d9; }
+        #relatorioBtn { background-color: #0d6efd; display: none; }
+        #relatorioBtn:hover { background-color: #0b5ed7; }
         
         .tab-content { display: none; } .tab-content.active { display: block; }
         #salvarFeedback { 
@@ -253,7 +259,7 @@
             border-radius: 6px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
             opacity: 0; visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s ease;
+            transition: all 0.3s ease;
             z-index: 1000;
             font-weight: 600;
         }
@@ -266,13 +272,13 @@
         /* === MODAIS (Pop-ups) === */
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); /* Mais escuro */
+            background: rgba(0,0,0,0.6);
             z-index: 2100;
             display: none; justify-content: center; 
             align-items: center;
         }
         .modal-content { 
-            background: #2a2a2a; /* Fundo escuro */
+            background: #2a2a2a; 
             border: 1px solid #3a3a3a;
             border-radius: 8px; padding: 25px;
             width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto;
@@ -315,13 +321,14 @@
         #relatorioBairroSelector label { 
             display: block; font-size: 14px; color: #f0f0f0;
             cursor: pointer; padding: 5px; border-radius: 4px;
+            transition: background-color 0.2s ease;
         }
         #relatorioBairroSelector label:hover { background: #3a3a3a; }
         
         #gerarRelatorioBtn { background-color: #28a745; }
         #gerarRelatorioBtn:hover { background-color: #218838; }
-        #imprimirRelatorioBtn { background-color: #007bff; }
-        #imprimirRelatorioBtn:hover { background-color: #0069d9; }
+        #imprimirRelatorioBtn { background-color: #0d6efd; }
+        #imprimirRelatorioBtn:hover { background-color: #0b5ed7; }
         
         #relatorioConteudo { margin-top: 20px; border-top: 1px solid #3a3a3a; padding-top: 15px; }
         #relatorioConteudo h4 { 
@@ -377,10 +384,9 @@
             #relatorioBairroSelector { grid-template-columns: 1fr; } 
         }
         
-        /* Impressão continua com fundo branco (forçado) */
         @media print {
             body {
-                background-color: #ffffff !important; /* Força fundo branco para impressão */
+                background-color: #ffffff !important;
             }
             body, .mapa, .painel, #sidebarMenu, #menuToggle, #historicoModal {
                 display: none !important;
@@ -388,7 +394,7 @@
             #relatorioModal, .modal-backdrop {
                 display: block !important; position: static; box-shadow: none;
                 border: none; background: none; height: auto; width: 100%;
-                color: #000000 !important; /* Força texto preto */
+                color: #000000 !important;
             }
             #relatorioModal .modal-content {
                 box-shadow: none; border: none; max-width: 100%; max-height: none;
@@ -409,7 +415,7 @@
             .relatorio-table { font-size: 10px; color: #000; }
             .relatorio-table th { background-color: #f0f0f0; color: #000; border-color: #ccc; }
             .relatorio-table td { color: #000; border-color: #ccc; }
-            .progress-bar { background-color: #28a745 !important; } /* Mantém a cor */
+            .progress-bar { background-color: #28a745 !important; }
         }
     </style>
 </head>
@@ -482,9 +488,6 @@
     </div>
 
     <script type="module">
-        // === O JAVASCRIPT ESTÁ 100% IDÊNTICO AO SEU CÓDIGO ANTERIOR ===
-        // === NENHUMA FUNCIONALIDADE FOI ALTERADA ===
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, update, push, remove, get } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
@@ -768,7 +771,7 @@
                         const observacao = quadra.observacao || "---"; 
                         
                         if (status === "Finalizada") finalizadas++;
-                        if (status === "Em andamento") emAndamento++;
+                        if (status === "Feito parcialmente") emAndamento++; // <-- TEXTO ATUALIZADO
                         if (mapeador !== "---") mapeadores.add(mapeador);
                         if (dirigente !== "---") dirigentes.add(dirigente);
                         
@@ -789,8 +792,7 @@
                         </div>
                         <p>
                             <strong>Finalizadas:</strong> ${finalizadas} | 
-                            <strong>Em Andamento:</strong> ${emAndamento} | 
-                            <strong>Não Feitas:</strong> ${naoFeitas}
+                            <strong>Parcialmente:</strong> ${emAndamento} | <strong>Não Feitas:</strong> ${naoFeitas}
                         </p>
                         <p><strong>Mapeadores:</strong> ${mapeadores.size > 0 ? [...mapeadores].join(', ') : 'Nenhum'}</p>
                         <p><strong>Dirigentes:</strong> ${dirigentes.size > 0 ? [...dirigentes].join(', ') : 'Nenhum'}</p>
@@ -866,7 +868,6 @@
             sidebarMenu.classList.remove("open");
         }
 
-        // === carregarPainel ATUALIZADO (com Obs. de Quadra e sem "Salvo por") ===
         function carregarPainel(){
             if(isContentLoaded) return;
             isContentLoaded=true;
@@ -912,8 +913,9 @@
                     const statusBtn = document.createElement("button");
                     statusBtn.classList.add("status-btn");
 
-                    const estados=["Não feita","Em andamento","Finalizada"];
-                    const cores={ "Não feita":"#dc3545","Em andamento":"#fd7e14","Finalizada":"#28a745" };
+                    // === TEXTO ATUALIZADO ===
+                    const estados=["Não feita","Feito parcialmente","Finalizada"];
+                    const cores={ "Não feita":"#dc3545","Feito parcialmente":"#fd7e14","Finalizada":"#28a745" };
                     let statusAtual="Não feita";
                     function atualizarBotao(status){
                         statusBtn.textContent=status;
@@ -942,7 +944,7 @@
                     detailsDiv.append(dirigenteLabel, dirigenteInput, obsLabel, obsInput);
                     
                     quadraMain.append(nomeContainer, statusBtn);
-                    quadraContainer.append(quadraMain, detailsDiv); // 'mapeadorText' foi removido
+                    quadraContainer.append(quadraMain, detailsDiv);
                     tabContent.appendChild(quadraContainer);
 
                     toggleBtn.addEventListener('click', () => {
@@ -1035,4 +1037,3 @@
     </script>
 </body>
 </html>
-
