@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa do Território</title>
     <style>
-        /* (CSS - Sem alterações) */
         * { transition: all 0.3s ease; box-sizing: border-box; }
         input:focus, button:focus, .tab-btn:focus, #menuToggle:focus, #closeMenuBtn:focus, #observacoesTextarea:focus {
             outline: 2px solid #4a90e2; outline-offset: 2px;
@@ -33,6 +32,7 @@
         }
         #sidebarBairrosList button.active { background: #4a90e2; color: white; font-weight: bold; }
         #sidebarBairrosList button:hover:not(.active) { background: #e0e0e0; }
+        
         .mapa { 
             flex: 2; min-width: 400px; display: flex; justify-content: center; align-items: center;
             background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -41,6 +41,7 @@
         .mapa img { 
             max-width: 100%; height: auto; border-radius: 10px; 
         }
+        
         .painel { flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.2); overflow-y: auto; max-height: 96vh;
         }
@@ -48,6 +49,7 @@
             margin-top: -10px; margin-bottom: 15px; font-weight: bold;
         }
         .painel h2 { text-align: center; margin-bottom: 20px; }
+        
         #datasContainer, #observacoesContainer {
             margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
             border-radius: 8px; background-color: #f9f9f9; display: none;
@@ -57,9 +59,11 @@
             border-radius: 4px;
         }
         .data-saved-by { font-size: 11px; color: #555; margin-bottom: 10px; height: 12px; }
+        
         #observacoesTextarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc;
             border-radius: 4px; resize: vertical; font-size: 14px;
         }
+
         .quadra-container { background-color: #eee; border-radius: 8px;
             margin-bottom: 12px; padding: 8px;
         }
@@ -75,12 +79,29 @@
         .quadra-details { display: none; margin-top: 8px;
             padding-top: 8px; border-top: 1px solid #ddd;
         }
-        .dirigente-input { width: 100%; padding: 5px; border: 1px solid #ccc;
-            border-radius: 4px; font-size: 12px;
+        /* === ESTILOS ATUALIZADOS PARA OS INPUTS DA QUADRA === */
+        .dirigente-input, .quadra-observacao-input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
         }
-        .quadra-mapeador { font-size: 11px; color: #555;
-            text-align: right; margin-top: 4px;
+        .quadra-observacao-input {
+            min-height: 50px;
+            resize: vertical;
+            margin-top: 5px; /* Espaço entre os dois inputs */
         }
+        .quadra-label {
+             font-size: 12px; 
+             font-weight: bold; 
+             display: block;
+        }
+        .quadra-label.obs-label {
+            margin-top: 8px; /* Espaço entre o dirigente e a obs */
+        }
+        /* O .quadra-mapeador foi removido do CSS pois não é mais exibido */
+        
         .logout, .reset-btn, #verHistoricoBtn, #relatorioBtn {
             display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
             margin-top: 10px; font-weight: bold; cursor: pointer;
@@ -92,6 +113,7 @@
         #verHistoricoBtn:hover { background-color: #5a6268; }
         #relatorioBtn { background-color: #007bff; display: none; }
         #relatorioBtn:hover { background-color: #0056b3; }
+        
         .tab-content { display: none; } .tab-content.active { display: block; }
         #salvarFeedback { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background-color: green; color: white; padding: 10px 20px; border-radius: 8px;
@@ -99,6 +121,7 @@
             transition: opacity 0.3s, visibility 0.3s; z-index: 1000;
         }
         #salvarFeedback.show { opacity: 1; visibility: visible; }
+        
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2100;
@@ -122,6 +145,7 @@
             width: 25px; height: 25px; cursor: pointer; font-weight: bold;
             line-height: 25px; text-align: center;
         }
+
         #relatorioBairroSelector {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
             max-height: 200px; overflow-y: auto; border: 1px solid #ddd;
@@ -160,6 +184,7 @@
             border: 1px solid #ddd; padding: 6px; text-align: left;
         }
         .relatorio-table th { background-color: #f8f8f8; }
+
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; padding: 10px; }
             .mapa { min-width: 100%; margin-bottom: 15px; margin-left: 0; 
@@ -207,19 +232,24 @@
     <div class="painel">
         <div id="welcomeMessage"></div>
         <h2 id="bairroTitulo">Selecione um Bairro</h2>
+        
         <div id="datasContainer">
             <label for="dataInicio">Início do território (Atual):</label>
             <input type="date" id="dataInicio">
             <div id="dataInicioPor" class="data-saved-by"></div>
+            
             <label for="dataFim">Fim do território (Atual):</label>
             <input type="date" id="dataFim">
             <div id="dataFimPor" class="data-saved-by"></div>
         </div>
+        
         <div id="observacoesContainer">
-            <h4>Observações do Bairro</h4>
+            <h4>Observações do Território</h4>
             <textarea id="observacoesTextarea" placeholder="Digite aqui anotações importantes sobre o bairro..."></textarea>
         </div>
+        
         <div id="conteudoBairros"></div>
+        
         <button class="reset-btn" id="resetBtn">Reiniciar marcações</button>
         <button id="verHistoricoBtn">Ver Histórico de Datas</button>
         <button id="relatorioBtn">Ver Relatório (Admin)</button>
@@ -244,6 +274,7 @@
                 <h3>Relatório Geral de Territórios</h3>
                 <button id="fecharRelatorioBtn" class="modal-close">×</button>
             </div>
+            
             <h4>1. Selecione os Bairros</h4>
             <div id="relatorioBairroSelector"></div>
             <button id="gerarRelatorioBtn">Gerar Relatório</button>
@@ -361,19 +392,18 @@
         let bairroAtivoNome = null;
         let isContentLoaded = false; 
         let currentUserName = null;
-        
-        // === NOVA VARIÁVEL GLOBAL ===
-        let isAdmin = false; 
+        // let isAdmin = false; // Não precisamos mais desta flag global
 
-        // (Funções do Menu, Feedback, Imagem... sem alterações)
         menuToggle.addEventListener("click", ()=>sidebarMenu.classList.add("open"));
         closeMenuBtn.addEventListener("click", ()=>sidebarMenu.classList.remove("open"));
+
         let feedbackTimeout;
         function mostrarFeedbackSalvo(){
             clearTimeout(feedbackTimeout);
             salvarFeedback.classList.add("show");
             feedbackTimeout=setTimeout(()=>salvarFeedback.classList.remove("show"),2000);
         }
+
         function atualizarVisualizacaoBairro(bairroID) {
             const filename = mapaNomesArquivos[bairroID];
             if (filename) {
@@ -383,7 +413,7 @@
             }
         }
 
-        // (Função Reiniciar, Salvar Observações, Salvar Datas, Histórico... sem alterações)
+        // === FUNÇÃO REINICIAR ATUALIZADA (para limpar obs da quadra) ===
         async function limparMarcacoes(){
             if(!bairroAtivoID || !bairroAtivoNome) return;
             if(!confirm(`Tem certeza que deseja REINICIAR TODAS as marcações e ARQUIVAR as datas atuais do bairro ${bairroAtivoNome}?`)) return;
@@ -405,6 +435,7 @@
                 updates[`quadra${i}/status`] = "Não feita";
                 updates[`quadra${i}/mapeador`] = "";
                 updates[`quadra${i}/dirigente`] = "";
+                updates[`quadra${i}/observacao`] = ""; // Limpa a observação
             }
             updates['datas'] = { inicio: "", fim: "", inicioPor: "", fimPor: "" };
             try{
@@ -491,7 +522,7 @@
             if (e.target === historicoModal) historicoModal.style.display = 'none';
         });
 
-        // (Funções do Relatório Admin... sem alterações)
+        // === FUNÇÕES DO RELATÓRIO ATUALIZADAS (com Obs. da Quadra) ===
         function abrirModalRelatorio() {
             relatorioConteudo.innerHTML = ""; 
             imprimirRelatorioBtn.style.display = 'none'; 
@@ -536,15 +567,20 @@
                         const status = quadra.status || "Não feita";
                         const mapeador = quadra.mapeador || "---";
                         const dirigente = quadra.dirigente || "---";
+                        const observacao = quadra.observacao || "---"; // Pega a observação
+                        
                         if (status === "Finalizada") finalizadas++;
                         if (status === "Em andamento") emAndamento++;
                         if (mapeador !== "---") mapeadores.add(mapeador);
                         if (dirigente !== "---") dirigentes.add(dirigente);
+                        
+                        // Adiciona a coluna de observação
                         tableRowsHtml += `<tr>
                             <td>Quadra ${i}</td>
                             <td>${status}</td>
                             <td>${mapeador}</td>
                             <td>${dirigente}</td>
+                            <td>${observacao}</td>
                         </tr>`;
                     }
                     const percent = (numQuadras > 0) ? (finalizadas / numQuadras) * 100 : 0;
@@ -581,6 +617,7 @@
                                     <th>Status</th>
                                     <th>Mapeador (Quem fez)</th>
                                     <th>Dirigente</th>
+                                    <th>Observação</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -633,7 +670,7 @@
             sidebarMenu.classList.remove("open");
         }
 
-        // === carregarPainel ATUALIZADO (para esconder "Salvo por") ===
+        // === carregarPainel ATUALIZADO (com Obs. de Quadra e sem "Salvo por") ===
         function carregarPainel(){
             if(isContentLoaded) return;
             isContentLoaded=true;
@@ -673,7 +710,7 @@
                     const toggleBtn = document.createElement("button");
                     toggleBtn.classList.add("toggle-anotacao-btn");
                     toggleBtn.textContent = "🗒️";
-                    toggleBtn.title = "Anotar Dirigente";
+                    toggleBtn.title = "Anotar Dirigente / Observação";
                     nomeContainer.append(nome, toggleBtn);
 
                     const statusBtn = document.createElement("button");
@@ -688,34 +725,42 @@
                     }
                     atualizarBotao(statusAtual);
 
+                    // --- Div de Detalhes Atualizada ---
                     const detailsDiv = document.createElement("div");
                     detailsDiv.classList.add("quadra-details");
+                    
+                    // Input Dirigente
                     const dirigenteLabel = document.createElement("label");
                     dirigenteLabel.textContent = "Dirigente:";
-                    dirigenteLabel.style.cssText = "font-size: 12px; font-weight: bold;";
+                    dirigenteLabel.classList.add("quadra-label");
                     const dirigenteInput = document.createElement("input");
                     dirigenteInput.type = "text";
                     dirigenteInput.classList.add("dirigente-input");
                     dirigenteInput.placeholder = "Nome do dirigente...";
-                    detailsDiv.append(dirigenteLabel, dirigenteInput);
                     
-                    const mapeadorText = document.createElement("div");
-                    mapeadorText.classList.add("quadra-mapeador");
+                    // NOVO: Input Observação
+                    const obsLabel = document.createElement("label");
+                    obsLabel.textContent = "Observação da Quadra:";
+                    obsLabel.classList.add("quadra-label", "obs-label");
+                    const obsInput = document.createElement("textarea");
+                    obsInput.classList.add("quadra-observacao-input");
+                    obsInput.placeholder = "Anotações da quadra...";
                     
-                    // === ATUALIZADO: Esconde 'Salvo por' para não-admins ===
-                    if (!isAdmin) {
-                        mapeadorText.style.display = "none";
-                    }
-                    // === FIM DA ATUALIZAÇÃO ===
+                    detailsDiv.append(dirigenteLabel, dirigenteInput, obsLabel, obsInput);
+                    
+                    // O 'mapeadorText' foi removido da criação do HTML
                     
                     quadraMain.append(nomeContainer, statusBtn);
-                    quadraContainer.append(quadraMain, mapeadorText, detailsDiv);
+                    quadraContainer.append(quadraMain, detailsDiv); // Não inclui mais o mapeadorText
                     tabContent.appendChild(quadraContainer);
+
+                    // --- Event Listeners Atualizados ---
 
                     toggleBtn.addEventListener('click', () => {
                         detailsDiv.style.display = (detailsDiv.style.display === 'block') ? 'none' : 'block';
                     });
 
+                    // Salvar Dirigente
                     let saveDirigenteTimeout;
                     dirigenteInput.addEventListener('input', () => {
                         clearTimeout(saveDirigenteTimeout);
@@ -725,6 +770,17 @@
                         }, 1000);
                     });
 
+                    // NOVO: Salvar Observação da Quadra
+                    let saveObsQuadraTimeout;
+                    obsInput.addEventListener('input', () => {
+                        clearTimeout(saveObsQuadraTimeout);
+                        saveObsQuadraTimeout = setTimeout(() => {
+                            const obsRef = ref(db, `territorios/${bairroID}/quadra${i}/observacao`);
+                            set(obsRef, obsInput.value).then(mostrarFeedbackSalvo);
+                        }, 1000);
+                    });
+
+                    // Salvar Status
                     statusBtn.addEventListener("click", ()=>{
                         const idx=estados.indexOf(statusAtual);
                         statusAtual=estados[(idx+1)%estados.length];
@@ -734,12 +790,14 @@
                         update(ref(db, `territorios/${bairroID}/quadra${i}`), dadosUpdate).then(mostrarFeedbackSalvo);
                     });
 
+                    // Carregar Dados (com Obs. e sem mapeadorText)
                     const quadraRef = ref(db, `territorios/${bairroID}/quadra${i}`);
                     onValue(quadraRef, snap=>{
                         const data = snap.val() || {};
                         const val = data.status || "Não feita";
                         const dirigente = data.dirigente || "";
-                        const mapeador = data.mapeador || "";
+                        const observacao = data.observacao || ""; // Pega a observação
+                        // const mapeador = data.mapeador || ""; // (Não é mais usado aqui)
                         
                         statusAtual=val;
                         atualizarBotao(statusAtual);
@@ -747,8 +805,10 @@
                         if (document.activeElement !== dirigenteInput) {
                             dirigenteInput.value = dirigente;
                         }
-                        // O texto é sempre preenchido, mas o 'div' está escondido para não-admins
-                        mapeadorText.textContent = mapeador ? `(Salvo por: ${mapeador})` : "";
+                        if (document.activeElement !== obsInput) {
+                            obsInput.value = observacao;
+                        }
+                        // mapeadorText.textContent = mapeador ? `(Salvo por: ${mapeador})` : ""; // (Linha removida)
                         
                         quadrasPorBairro[nomeBairro][i] = statusBtn;
                     });
@@ -764,7 +824,7 @@
             if(primeiroBairroID) setBairroAtivo(primeiroBairroID,primeiroBairroNome);
         }
 
-        // === onAuthStateChanged ATUALIZADO (Define 'isAdmin') ===
+        // (onAuthStateChanged - sem alterações)
         onAuthStateChanged(auth,user=>{
             if(user) {
                 currentUserName = user.displayName || "Usuário"; 
@@ -775,12 +835,13 @@
                     "matheushenriquedefaccimarconde@gmail.com"
                 ];
                 
+                // A flag 'isAdmin' não é mais necessária aqui,
+                // pois o único lugar que a usava (quadra-mapeador) foi removido.
                 if (adminEmails.includes(user.email)) {
                     relatorioBtn.style.display = 'block';
-                    isAdmin = true; // Define a flag de admin
                 }
-
-                carregarPainel(); // Carrega o painel DEPOIS de definir a flag
+                
+                carregarPainel();
             }
             else {
                 window.location.href="/territoriov3/index.html"; 
@@ -794,14 +855,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
