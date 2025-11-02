@@ -479,8 +479,7 @@
             if (!bairroAtivoID) return;
             const data = { fim: dataFimInput.value, fimPor: currentUserName };
             update(ref(db, `territorios/${bairroAtivoID}/datas`), data).then(() => {
-                mostrarFeedbackSalvo();
-                dataFimPor.textContent = `(Salvo por: ${currentUserName})`;
+            
             });
         });
 
@@ -856,6 +855,7 @@
     </script>
 </body>
 </html>
+
 
 
 
