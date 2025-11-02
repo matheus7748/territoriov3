@@ -5,196 +5,365 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa do Território</title>
     <style>
-        * { transition: all 0.3s ease; box-sizing: border-box; }
+        /* === NOVOS ESTILOS GLOBAIS === */
+        * {
+            box-sizing: border-box;
+            /* Removemos a transição global para aplicar de forma específica */
+        }
+        
+        body {
+            margin: 0;
+            /* Fonte mais moderna e legível */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa; /* Um cinza muito mais claro */
+            color: #212529; /* Texto mais suave que o preto puro */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            flex-direction: row;
+        }
+
+        /* Foco visível para acessibilidade */
         input:focus, button:focus, .tab-btn:focus, #menuToggle:focus, #closeMenuBtn:focus, #observacoesTextarea:focus {
-            outline: 2px solid #4a90e2; outline-offset: 2px;
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
         }
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #f0f0f0;
-            display: flex; justify-content: center; align-items: flex-start; height: 100vh;
-            gap: 20px; padding: 20px; flex-direction: row;
+
+        /* === BOTÕES: Base (Todos os botões) === */
+        button {
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 10px 15px;
+            border: 1px solid transparent;
+            /* Animação fluida e específica */
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
         }
-        #menuToggle { position: fixed; top: 15px; left: 15px; z-index: 1100; background: #4a90e2;
-            color: white; border: none; padding: 10px 15px; font-size: 24px; font-weight: bold;
-            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer;
+        /* Animação de "levantar" ao passar o rato */
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        #sidebarMenu { position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
-            background: #f8f8f8; box-shadow: 5px 0 15px rgba(0,0,0,0.2); z-index: 2000;
-            padding: 20px; padding-top: 50px; overflow-y: auto; transition: left 0.3s ease;
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* === MENU LATERAL (Sidebar) === */
+        #menuToggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1100;
+            background: #007bff; /* Azul primário */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #sidebarMenu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100%;
+            background: #ffffff; /* Fundo branco limpo */
+            box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 20px;
+            padding-top: 60px; /* Mais espaço para o botão de fechar */
+            overflow-y: auto;
+            transition: left 0.3s ease-in-out; /* Animação mais suave */
         }
         #sidebarMenu.open { left: 0; }
-        #sidebarMenu h3 { margin-top: 0; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; }
-        #closeMenuBtn { background: #d9534f; color: white; border: none; padding: 5px 10px;
-            border-radius: 5px; position: absolute; top: 10px; right: 10px; font-weight: bold; cursor: pointer;
+        #sidebarMenu h3 { 
+            margin-top: 0; 
+            border-bottom: 2px solid #e9ecef; /* Linha mais suave */
+            padding-bottom: 10px; 
+            margin-bottom: 10px; 
         }
-        #sidebarBairrosList button { display: block; width: 100%; text-align: left; background: none; border: none;
-            padding: 12px 10px; margin: 5px 0; font-size: 16px; color: #333; border-radius: 5px; outline: none;
-            cursor: pointer;
+        #closeMenuBtn {
+            background: #dc3545; /* Vermelho mais suave */
+            color: white;
+            border: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
         }
-        #sidebarBairrosList button.active { background: #4a90e2; color: white; font-weight: bold; }
-        #sidebarBairrosList button:hover:not(.active) { background: #e0e0e0; }
+        #sidebarBairrosList button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            padding: 12px 15px;
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        #sidebarBairrosList button.active {
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        #sidebarBairrosList button:hover:not(.active) {
+            background: #e9ecef; /* Fundo cinza claro no hover */
+            color: #212529;
+            transform: none; /* Remove a animação de "levantar" */
+            box-shadow: none;
+        }
         
+        /* === PAINÉIS PRINCIPAIS (Mapa e Painel Lateral) === */
         .mapa { 
             flex: 2; min-width: 400px; display: flex; justify-content: center; align-items: center;
-            background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            background: white; border-radius: 10px;
             padding: 10px; position: relative; margin-left: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Sombra mais suave */
         }
         .mapa img { 
             max-width: 100%; height: auto; border-radius: 10px; 
         }
-        
-        .painel { flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2); overflow-y: auto; max-height: 96vh;
+        .painel { 
+            flex: 1; min-width: 350px; background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Sombra mais suave */
+            overflow-y: auto; max-height: 96vh;
         }
-        #welcomeMessage { text-align: center; font-size: 16px; color: #555;
-            margin-top: -10px; margin-bottom: 15px; font-weight: bold;
+        #welcomeMessage { 
+            text-align: center; font-size: 16px; color: #6c757d; /* Cinza médio */
+            margin-top: -10px; margin-bottom: 15px; font-weight: 500;
         }
         .painel h2 { text-align: center; margin-bottom: 20px; }
         
+        /* Caixas de Observação e Data */
         #datasContainer, #observacoesContainer {
-            margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;
-            border-radius: 8px; background-color: #f9f9f9; display: none;
+            margin-bottom: 20px; padding: 15px; border: 1px solid #e9ecef; /* Borda mais suave */
+            border-radius: 8px; background-color: #f8f9fa; display: none;
         }
-        #datasContainer label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
-        #datasContainer input[type="date"] { width: 100%; padding: 8px; border: 1px solid #ccc;
-            border-radius: 4px;
+        #datasContainer label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        #datasContainer input[type="date"], 
+        #observacoesTextarea,
+        .dirigente-input,
+        .quadra-observacao-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da; /* Borda padrão */
+            border-radius: 6px;
+            font-size: 14px;
         }
-        .data-saved-by { font-size: 11px; color: #555; margin-bottom: 10px; height: 12px; }
-        
-        #observacoesTextarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ccc;
-            border-radius: 4px; resize: vertical; font-size: 14px;
-        }
+        .data-saved-by { font-size: 11px; color: #6c757d; margin-bottom: 10px; height: 12px; }
+        #observacoesTextarea { min-height: 100px; resize: vertical; }
 
-        .quadra-container { background-color: #eee; border-radius: 8px;
-            margin-bottom: 12px; padding: 8px;
+        /* === QUADRAS (Novo estilo "Card") === */
+        .quadra-container { 
+            background-color: #ffffff; /* Fundo branco */
+            border: 1px solid #e9ecef; /* Borda clara */
+            border-radius: 8px;
+            margin-bottom: 12px; 
+            padding: 12px 15px; /* Mais espaçamento */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s ease;
+        }
+        .quadra-container:hover {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
         }
         .quadra-main { display: flex; justify-content: space-between; align-items: center; }
         .quadra-nome-container { display: flex; align-items: center; }
-        .quadra-nome { font-weight: bold; margin-right: 5px; }
-        .toggle-anotacao-btn { background: none; border: none; cursor: pointer;
+        .quadra-nome { font-weight: 600; font-size: 15px; margin-right: 5px; }
+        .toggle-anotacao-btn { 
+            background: none; border: none; cursor: pointer;
             font-size: 16px; padding: 0 5px;
+            transition: transform 0.2s ease;
         }
-        .status-btn { flex: 1; max-width: 130px; height: 40px; border: none;
-            border-radius: 8px; font-weight: bold; color: white; cursor: pointer;
+        .toggle-anotacao-btn:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: none; /* Remove sombra do botão base */
         }
-        .quadra-details { display: none; margin-top: 8px;
-            padding-top: 8px; border-top: 1px solid #ddd;
+        
+        /* Botões de Status */
+        .status-btn { 
+            flex: 1; max-width: 120px; /* Um pouco mais estreito */
+            height: 38px;
+            border: none;
+            font-weight: 600; 
+            color: white; 
+            cursor: pointer;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
-        /* === ESTILOS ATUALIZADOS PARA OS INPUTS DA QUADRA === */
-        .dirigente-input, .quadra-observacao-input {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 12px;
+        .btn-nao { background-color: #dc3545; } /* Vermelho */
+        .btn-meio { background-color: #fd7e14; } /* Laranja */
+        .btn-sim { background-color: #28a745; } /* Verde */
+        
+        .quadra-details { 
+            display: none; 
+            margin-top: 12px;
+            padding-top: 12px; 
+            border-top: 1px solid #e9ecef;
         }
         .quadra-observacao-input {
             min-height: 50px;
             resize: vertical;
-            margin-top: 5px; /* Espaço entre os dois inputs */
+            margin-top: 5px;
         }
         .quadra-label {
-             font-size: 12px; 
-             font-weight: bold; 
+             font-size: 13px; 
+             font-weight: 600; 
              display: block;
+             color: #495057;
         }
         .quadra-label.obs-label {
-            margin-top: 8px; /* Espaço entre o dirigente e a obs */
+            margin-top: 10px;
         }
-        /* O .quadra-mapeador foi removido do CSS pois não é mais exibido */
         
+        /* === BOTÕES DO PAINEL (Cores) === */
         .logout, .reset-btn, #verHistoricoBtn, #relatorioBtn {
-            display: block; width: 100%; color: white; border: none; padding: 10px; border-radius: 8px;
-            margin-top: 10px; font-weight: bold; cursor: pointer;
+            display: block; width: 100%; color: white; border: none; 
+            padding: 10px; margin-top: 10px; 
         }
-        .logout { background-color: #444; } .logout:hover { background-color: #222; }
-        .reset-btn { background-color: #d9534f; display: none; }
-        .reset-btn:hover { background-color: #c9302c; }
+        .logout { background-color: #495057; } .logout:hover { background-color: #343a40; }
+        .reset-btn { background-color: #dc3545; display: none; }
+        .reset-btn:hover { background-color: #c82333; }
         #verHistoricoBtn { background-color: #6c757d; display: none; }
         #verHistoricoBtn:hover { background-color: #5a6268; }
         #relatorioBtn { background-color: #007bff; display: none; }
-        #relatorioBtn:hover { background-color: #0056b3; }
+        #relatorioBtn:hover { background-color: #0069d9; }
         
         .tab-content { display: none; } .tab-content.active { display: block; }
-        #salvarFeedback { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background-color: green; color: white; padding: 10px 20px; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s; z-index: 1000;
+        #salvarFeedback { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background-color: #28a745; color: white; padding: 12px 25px; 
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s ease;
+            z-index: 1000;
+            font-weight: 600;
         }
-        #salvarFeedback.show { opacity: 1; visibility: visible; }
-        
+        #salvarFeedback.show { 
+            opacity: 1; 
+            visibility: visible;
+            transform: translateX(-50%) translateY(-10px); /* Animação de subir */
+        }
+
+        /* === MODAIS (Pop-ups) === */
         .modal-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 2100;
-            display: none; justify-content: center; align-items: center;
+            display: none; justify-content: center; 
+            align-items: center; /* Centraliza o modal */
         }
-        .modal-content { background: white; border-radius: 8px; padding: 20px;
-            width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto;
+        .modal-content { 
+            background: white; border-radius: 8px; padding: 25px;
+            width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
         .modal-content-large { max-width: 800px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 15px;
+        .modal-header { 
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #e9ecef; padding-bottom: 15px; margin-bottom: 20px;
         }
-        .modal-header h3 { margin: 0; }
-        .modal-close { font-size: 28px; font-weight: bold; cursor: pointer; border: none; background: none; }
+        .modal-header h3 { margin: 0; font-size: 22px; }
+        .modal-close { 
+            font-size: 28px; font-weight: bold; cursor: pointer; 
+            border: none; background: none; color: #6c757d;
+            transition: color 0.2s ease;
+        }
+        .modal-close:hover { color: #212529; }
+        
         #historicoLista { list-style: none; padding: 0; }
-        .historico-item { display: flex; justify-content: space-between; align-items: center;
-            padding: 10px; border-bottom: 1px solid #eee;
+        .historico-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #e9ecef;
         }
-        .historico-item span { font-size: 14px; }
-        .historico-delete-btn { background: #d9534f; color: white; border: none; border-radius: 50%;
-            width: 25px; height: 25px; cursor: pointer; font-weight: bold;
-            line-height: 25px; text-align: center;
+        .historico-item:last-child { border-bottom: none; }
+        .historico-item span { font-size: 14px; line-height: 1.5; }
+        .historico-delete-btn { 
+            background: #dc3545; color: white; border: none; border-radius: 50%;
+            width: 30px; height: 30px; cursor: pointer; font-weight: bold;
+            line-height: 30px; text-align: center;
+            font-size: 16px;
         }
 
+        /* === MODAL DE RELATÓRIO (Re-estilizado) === */
         #relatorioBairroSelector {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-            max-height: 200px; overflow-y: auto; border: 1px solid #ddd;
-            padding: 10px; margin-bottom: 15px;
+            max-height: 200px; overflow-y: auto; border: 1px solid #ced4da;
+            padding: 15px; margin-bottom: 15px; border-radius: 6px;
         }
-        #relatorioBairroSelector label { display: block; font-size: 14px; }
-        #gerarRelatorioBtn, #imprimirRelatorioBtn {
-             background-color: #28a745; color: white; border: none; padding: 10px;
-             border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;
+        #relatorioBairroSelector label { 
+            display: block; font-size: 14px;
+            cursor: pointer; padding: 5px; border-radius: 4px;
         }
+        #relatorioBairroSelector label:hover { background: #f8f9fa; }
+        
+        #gerarRelatorioBtn { background-color: #28a745; }
+        #gerarRelatorioBtn:hover { background-color: #218838; }
         #imprimirRelatorioBtn { background-color: #007bff; }
-        #relatorioConteudo { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 15px; }
-        #relatorioConteudo h4 { background-color: #f0f0f0; padding: 10px;
-            border-radius: 5px; margin-top: 15px;
+        #imprimirRelatorioBtn:hover { background-color: #0069d9; }
+        
+        #relatorioConteudo { margin-top: 20px; border-top: 1px solid #e9ecef; padding-top: 15px; }
+        #relatorioConteudo h4 { 
+            background-color: #f8f9fa; 
+            padding: 12px 15px;
+            border-radius: 6px; margin-top: 15px;
+            color: #212529;
         }
-        #relatorioConteudo h5 { margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
-        #relatorioConteudo p { font-size: 13px; margin: 4px 0; }
+        #relatorioConteudo h5 { 
+            margin-bottom: 10px; border-bottom: 1px solid #e9ecef; 
+            padding-bottom: 8px; font-size: 16px;
+        }
+        #relatorioConteudo p { font-size: 14px; margin: 4px 0; }
+        
         .relatorio-summary {
-            border: 1px solid #ddd; background: #fdfdfd; padding: 10px;
-            border-radius: 5px; margin-bottom: 15px;
+            border: 1px solid #e9ecef; background: #fdfdfd; padding: 15px;
+            border-radius: 8px; margin-bottom: 20px;
         }
-        .relatorio-summary p { margin: 5px 0; font-size: 14px; }
+        .relatorio-summary p { margin: 8px 0; font-size: 14px; }
         .progress-bar-container {
             width: 100%; background-color: #e9ecef; border-radius: 5px;
-            height: 20px; margin-top: 5px; overflow: hidden;
+            height: 22px; margin-top: 8px; overflow: hidden;
         }
         .progress-bar {
             height: 100%; background-color: #28a745; color: white;
-            text-align: center; line-height: 20px; font-size: 12px;
+            text-align: center; line-height: 22px; font-size: 13px;
             font-weight: bold; transition: width 0.5s ease;
         }
         .relatorio-table {
-            width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;
+            width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 15px;
         }
         .relatorio-table th, .relatorio-table td {
-            border: 1px solid #ddd; padding: 6px; text-align: left;
+            border: 1px solid #dee2e6; padding: 8px 10px; text-align: left;
         }
-        .relatorio-table th { background-color: #f8f8f8; }
+        .relatorio-table th { background-color: #f8f9fa; font-weight: 600; }
 
         @media (max-width: 768px) {
-            body { flex-direction: column; height: auto; padding: 10px; }
-            .mapa { min-width: 100%; margin-bottom: 15px; margin-left: 0; 
-                   padding-top: 50px;
+            body { 
+                flex-direction: column; height: auto; padding: 10px; gap: 15px;
             }
-            .mapa img { max-height: 40vh; object-fit: contain; }
-            #menuToggle { top: 10px; left: 10px; }
-            .painel { max-height: 80vh; }
+            .mapa { 
+                min-width: 100%; margin-bottom: 0; margin-left: 0; 
+                padding-top: 50px;
+                height: 50vh; /* Altura fixa no mobile */
+            }
+            .mapa img { max-height: 100%; object-fit: contain; }
+            #menuToggle { top: 15px; left: 15px; }
+            .painel { 
+                max-height: none; /* Permite crescer */
+                min-width: 100%;
+            }
             #relatorioBairroSelector { grid-template-columns: 1fr; } 
         }
+        
         @media print {
             body, .mapa, .painel, #sidebarMenu, #menuToggle, #historicoModal {
                 display: none !important;
@@ -205,10 +374,12 @@
             }
             #relatorioModal .modal-content {
                 box-shadow: none; border: none; max-width: 100%; max-height: none;
+                padding: 0;
             }
             .modal-header .modal-close, #gerarRelatorioBtn, #imprimirRelatorioBtn, #relatorioBairroSelector {
                 display: none !important;
             }
+            .modal-header { border-bottom: none; }
             .modal-header h3 { font-size: 24px; }
             #relatorioConteudo { margin-top: 0; border: none; }
             .relatorio-table { font-size: 10px; }
@@ -217,10 +388,10 @@
 </head>
 <body>
 
-    <button id="menuToggle" title="Abrir Menu de Bairros">...</button>
+    <button id="menuToggle" title="Abrir Menu de Bairros">☰</button>
     
     <div id="sidebarMenu">
-        <button id="closeMenuBtn">X</button>
+        <button id="closeMenuBtn">×</button>
         <h3>Selecione o Bairro</h3>
         <div id="sidebarBairrosList"></div>
     </div>
@@ -256,7 +427,7 @@
         <button class="logout" id="logoutBtn">Sair</button>
     </div>
     
-    <div id="salvarFeedback">Salvo! (Instantâneo)</div>
+    <div id="salvarFeedback">Salvo!</div>
 
     <div id="historicoModal" class="modal-backdrop">
         <div class="modal-content">
@@ -392,7 +563,6 @@
         let bairroAtivoNome = null;
         let isContentLoaded = false; 
         let currentUserName = null;
-        // let isAdmin = false; // Não precisamos mais desta flag global
 
         menuToggle.addEventListener("click", ()=>sidebarMenu.classList.add("open"));
         closeMenuBtn.addEventListener("click", ()=>sidebarMenu.classList.remove("open"));
@@ -401,7 +571,7 @@
         function mostrarFeedbackSalvo(){
             clearTimeout(feedbackTimeout);
             salvarFeedback.classList.add("show");
-            feedbackTimeout=setTimeout(()=>salvarFeedback.classList.remove("show"),2000);
+            feedbackTimeout=setTimeout(()=>salvarFeedback.classList.remove("show"), 2000);
         }
 
         function atualizarVisualizacaoBairro(bairroID) {
@@ -413,7 +583,6 @@
             }
         }
 
-        // === FUNÇÃO REINICIAR ATUALIZADA (para limpar obs da quadra) ===
         async function limparMarcacoes(){
             if(!bairroAtivoID || !bairroAtivoNome) return;
             if(!confirm(`Tem certeza que deseja REINICIAR TODAS as marcações e ARQUIVAR as datas atuais do bairro ${bairroAtivoNome}?`)) return;
@@ -435,7 +604,7 @@
                 updates[`quadra${i}/status`] = "Não feita";
                 updates[`quadra${i}/mapeador`] = "";
                 updates[`quadra${i}/dirigente`] = "";
-                updates[`quadra${i}/observacao`] = ""; // Limpa a observação
+                updates[`quadra${i}/observacao`] = ""; 
             }
             updates['datas'] = { inicio: "", fim: "", inicioPor: "", fimPor: "" };
             try{
@@ -522,7 +691,6 @@
             if (e.target === historicoModal) historicoModal.style.display = 'none';
         });
 
-        // === FUNÇÕES DO RELATÓRIO ATUALIZADAS (com Obs. da Quadra) ===
         function abrirModalRelatorio() {
             relatorioConteudo.innerHTML = ""; 
             imprimirRelatorioBtn.style.display = 'none'; 
@@ -567,14 +735,13 @@
                         const status = quadra.status || "Não feita";
                         const mapeador = quadra.mapeador || "---";
                         const dirigente = quadra.dirigente || "---";
-                        const observacao = quadra.observacao || "---"; // Pega a observação
+                        const observacao = quadra.observacao || "---"; 
                         
                         if (status === "Finalizada") finalizadas++;
                         if (status === "Em andamento") emAndamento++;
                         if (mapeador !== "---") mapeadores.add(mapeador);
                         if (dirigente !== "---") dirigentes.add(dirigente);
                         
-                        // Adiciona a coluna de observação
                         tableRowsHtml += `<tr>
                             <td>Quadra ${i}</td>
                             <td>${status}</td>
@@ -640,7 +807,6 @@
         });
         imprimirRelatorioBtn.addEventListener('click', () => window.print());
 
-        // (setBairroAtivo - sem alterações)
         function setBairroAtivo(bairroID,nomeBairro){
             bairroAtivoID = bairroID;
             bairroAtivoNome = nomeBairro;
@@ -729,7 +895,6 @@
                     const detailsDiv = document.createElement("div");
                     detailsDiv.classList.add("quadra-details");
                     
-                    // Input Dirigente
                     const dirigenteLabel = document.createElement("label");
                     dirigenteLabel.textContent = "Dirigente:";
                     dirigenteLabel.classList.add("quadra-label");
@@ -748,10 +913,10 @@
                     
                     detailsDiv.append(dirigenteLabel, dirigenteInput, obsLabel, obsInput);
                     
-                    // O 'mapeadorText' foi removido da criação do HTML
+                    // Elemento 'mapeadorText' removido daqui
                     
                     quadraMain.append(nomeContainer, statusBtn);
-                    quadraContainer.append(quadraMain, detailsDiv); // Não inclui mais o mapeadorText
+                    quadraContainer.append(quadraMain, detailsDiv);
                     tabContent.appendChild(quadraContainer);
 
                     // --- Event Listeners Atualizados ---
@@ -760,7 +925,6 @@
                         detailsDiv.style.display = (detailsDiv.style.display === 'block') ? 'none' : 'block';
                     });
 
-                    // Salvar Dirigente
                     let saveDirigenteTimeout;
                     dirigenteInput.addEventListener('input', () => {
                         clearTimeout(saveDirigenteTimeout);
@@ -780,7 +944,6 @@
                         }, 1000);
                     });
 
-                    // Salvar Status
                     statusBtn.addEventListener("click", ()=>{
                         const idx=estados.indexOf(statusAtual);
                         statusAtual=estados[(idx+1)%estados.length];
@@ -796,8 +959,7 @@
                         const data = snap.val() || {};
                         const val = data.status || "Não feita";
                         const dirigente = data.dirigente || "";
-                        const observacao = data.observacao || ""; // Pega a observação
-                        // const mapeador = data.mapeador || ""; // (Não é mais usado aqui)
+                        const observacao = data.observacao || "";
                         
                         statusAtual=val;
                         atualizarBotao(statusAtual);
@@ -808,7 +970,6 @@
                         if (document.activeElement !== obsInput) {
                             obsInput.value = observacao;
                         }
-                        // mapeadorText.textContent = mapeador ? `(Salvo por: ${mapeador})` : ""; // (Linha removida)
                         
                         quadrasPorBairro[nomeBairro][i] = statusBtn;
                     });
@@ -824,7 +985,7 @@
             if(primeiroBairroID) setBairroAtivo(primeiroBairroID,primeiroBairroNome);
         }
 
-        // (onAuthStateChanged - sem alterações)
+        // onAuthStateChanged (sem alterações)
         onAuthStateChanged(auth,user=>{
             if(user) {
                 currentUserName = user.displayName || "Usuário"; 
@@ -835,8 +996,6 @@
                     "matheushenriquedefaccimarconde@gmail.com"
                 ];
                 
-                // A flag 'isAdmin' não é mais necessária aqui,
-                // pois o único lugar que a usava (quadra-mapeador) foi removido.
                 if (adminEmails.includes(user.email)) {
                     relatorioBtn.style.display = 'block';
                 }
